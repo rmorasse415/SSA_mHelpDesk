@@ -90,28 +90,56 @@ namespace SSA_mHelpDesk.Domain
 
             DateTime? nad = ticket.GetNextAppointmentDate();
 
-            if (!nad.HasValue)
+            if (ticket.ticketStatus == "Closed: Invoices with Quickbooks")
                 return null;
 
-            if (nad.Value.Date == today)
+            if (!nad.HasValue)
             {
                 if (ticket.typeName == "Fire Inspection")
-                    return FireInspectionDataItems;
-                else
-                    return TodayDataItems;
-            }
+                    //                    return FireInspectionDataItems;
+                    return null;
 
-            if (nad.Value.Date < today)
-            {
                 if (ticket.ticketStatus == "New" ||
                     ticket.ticketStatus == "New: Scheduled" ||
-                    ticket.ticketStatus == "Open: ConfirmSchedule" ||
-                    ticket.ticketStatus == "Open: ReturnNeeded")
+                    ticket.ticketStatus == "New: ConfirmSchedule" ||
+                    ticket.ticketStatus == "New: Waiting For Parts" ||
+                    ticket.ticketStatus == "Open: Confirm Schedule" ||
+                    ticket.ticketStatus == "Open: En Route" ||
+                    ticket.ticketStatus == "Open: In-Progress" ||
+                    ticket.ticketStatus == "Open: Job Complete" ||
+                    ticket.ticketStatus == "Open: Rescheduled" ||
+                    ticket.ticketStatus == "Open: Return Needed")
                 {
                     return ToScheduleDataItems;
                 }
-            }
 
+            }
+            else
+            {
+                if (nad.Value.Date == today)
+                    return TodayDataItems;
+
+                //                else if (nad.Value.Date > today-7 &&
+                //                       ticket.ticketStatus == "Open: Job Complete")
+                //                    return ToScheduleDataItems;
+
+
+                else if (nad.Value.Date < today)
+                {
+                    if (ticket.ticketStatus == "New" ||
+                        ticket.ticketStatus == "New: Scheduled" ||
+                        ticket.ticketStatus == "New: ConfirmSchedule" ||
+                        ticket.ticketStatus == "New: Waiting For Parts" ||
+                        ticket.ticketStatus == "Open: Confirm Schedule" ||
+                        ticket.ticketStatus == "Open: En Route" ||
+                        ticket.ticketStatus == "Open: In-Progress" ||
+                        ticket.ticketStatus == "Open: Rescheduled" ||
+                        ticket.ticketStatus == "Open: Return Needed")
+                    {
+                        return ToScheduleDataItems;
+                    }
+                }
+            }
             return null;
         }
 
