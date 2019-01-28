@@ -253,6 +253,7 @@ namespace SSA_mHelpDesk.Domain
         public String Subject => _ticket.subject;
         public String TicketStatus => _ticket.ticketStatus;
         public DateTime? NextAppointmentDate => _ticket.GetNextAppointmentDate();
+        public String JobNumber => _ticket.ticketId;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

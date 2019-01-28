@@ -40,12 +40,14 @@
                         <ColumnDefinition Width="18*"/>
                         <ColumnDefinition Width="17*"/>
                         <ColumnDefinition Width="20*"/>
+                        <ColumnDefinition Width="12*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Margin="4,0,4,0" TextWrapping="Wrap" Text="{Binding CustomerName}" />
                     <TextBlock Grid.Column="1" Margin="4,0,4,0" TextWrapping="Wrap" Text="{Binding ServiceAddress}" />
                     <TextBlock Grid.Column="2" Margin="4,0,4,0" TextWrapping="Wrap" Text="{Binding Subject}"/>
                     <TextBlock Grid.Column="3" Margin="4,0,4,0" TextWrapping="Wrap" Text="{Binding TicketStatus}"/>
                     <TextBlock Grid.Column="4" Margin="4,0,4,0" TextWrapping="Wrap" Text="{Binding NextAppointmentDate}"/>
+                    <TextBlock Grid.Column="5" Margin="4,0,4,0" TextWrapping="Wrap" Text="{Binding JobNumber}"/>
                 </Grid>
             </Border>
         </DataTemplate>
