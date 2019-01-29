@@ -77,6 +77,8 @@ namespace SSA_mHelpDesk.API
             if (statusId.HasValue)
                 uriParams.Add(new Tuple<string, string>("statusId", statusId.ToString()));
 
+            uriParams.Add(new Tuple<string, string>("fields", "ticketId,statusId,subject,customerId,typeId,ticketNumber,appointmentCount,appointments,customStatusId,typeName,ticketStatus,customer{name},serviceLocation{name,fulladdress}"));
+
             return await GetTicketsAsync(uriParams);
         }
 
@@ -174,35 +176,44 @@ namespace SSA_mHelpDesk.API
 
             string requestUri = sApiBase + uri;
             Console.WriteLine(requestUri);
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUri);
+            int retryCount = 0;
 
-            if (Properties.Settings.Default.Production && Properties.Settings.Default.Bearer_Workaround)
-                request.Headers.Add("Authorization: bearer " + authInfo?.AccessToken); //lowercase 'b' to work around issue
-            else
-                request.Headers.Add("Authorization: Bearer " + authInfo?.AccessToken);
-            //request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+            while (retryCount++ < 4)  // Retry
+            { 
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUri);
 
-            try
-            {
-                using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
-                using (Stream stream = response.GetResponseStream())
-                using (StreamReader reader = new StreamReader(stream))
+                if (Properties.Settings.Default.Production && Properties.Settings.Default.Bearer_Workaround)
+                    request.Headers.Add("Authorization: bearer " + authInfo?.AccessToken); //lowercase 'b' to work around issue
+                else
+                    request.Headers.Add("Authorization: Bearer " + authInfo?.AccessToken);
+                //request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
+                try
                 {
-                    var tmp = await reader.ReadToEndAsync();
-
-                    lock(this)
+                    using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
+                    using (Stream stream = response.GetResponseStream())
+                    using (StreamReader reader = new StreamReader(stream))
                     {
-                        mRawOutput = tmp;
-                    }
+                        var tmp = await reader.ReadToEndAsync();
 
-                    return mRawOutput;
+                        lock (this)
+                        {
+                            mRawOutput = tmp;
+                        }
+
+                        return mRawOutput;
+                    }
                 }
+                catch (Exception e)
+                {
+                    mLastError = e;
+                    if (e.HResult != -2146233079)// This is wrong code
+                        return e.ToString();
+                    else
+                        System.Threading.Thread.Sleep(250);
+                }   
             }
-            catch (Exception e)
-            {
-                mLastError = e;
-                return e.ToString();
-            }
+            return mLastError.ToString();
         }
     }
 }

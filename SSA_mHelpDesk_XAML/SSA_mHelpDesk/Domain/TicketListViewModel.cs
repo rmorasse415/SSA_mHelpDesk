@@ -52,7 +52,7 @@ namespace SSA_mHelpDesk.Domain
                         if (ReferenceEquals(testList, list))
                         {
                             prevTicket.ResetTicket(t); // update the ticket TODO check property change
-                            BeginFetchTicketServiceLocation(prevTicket);
+                            //BeginFetchTicketServiceLocation(prevTicket);
                             list = null; //don't add to list below
                         }
                         else // this ticket no longer belongs in this list
@@ -71,7 +71,7 @@ namespace SSA_mHelpDesk.Domain
 
                     //fetchTicketCustomer(obsTick);
                     //if (t.serviceLocationId != t.customerId)
-                        BeginFetchTicketServiceLocation(obsTick);
+                       //BeginFetchTicketServiceLocation(obsTick);
 
                     list.Add(obsTick);
                 }
