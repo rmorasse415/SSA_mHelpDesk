@@ -27,11 +27,42 @@
                         </Setter.Value>
                     </Setter>
                 </Trigger>
+                <Trigger Property="HasItems" Value="true">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <StackPanel>
+                                    <Border Padding="8,0,8,4" >
+                                        <StackPanel>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="20*"/>
+                                                    <ColumnDefinition Width="25*"/>
+                                                    <ColumnDefinition Width="18*"/>
+                                                    <ColumnDefinition Width="17*"/>
+                                                    <ColumnDefinition Width="20*"/>
+                                                    <ColumnDefinition Width="12*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Customer Name" />
+                                                <TextBlock Grid.Column="1" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Service Address" />
+                                                <TextBlock Grid.Column="2" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Subject"/>
+                                                <TextBlock Grid.Column="3" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Ticket Status"/>
+                                                <TextBlock Grid.Column="4" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Next Appointment Date"/>
+                                                <TextBlock Grid.Column="5" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Job Number"/>
+                                            </Grid>
+                                            <Separator Background="Black"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <ItemsPresenter/>
+                                </StackPanel>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
             </Style.Triggers>
         </Style>
         <DataTemplate DataType="{x:Type domain:ObservableTicket}">
             <Border
-		        x:Name="Border"
 		        Padding="8">
                 <Grid>
                     <Grid.ColumnDefinitions>
