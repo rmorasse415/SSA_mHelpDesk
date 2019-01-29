@@ -77,7 +77,7 @@ namespace SSA_mHelpDesk.API
             if (statusId.HasValue)
                 uriParams.Add(new Tuple<string, string>("statusId", statusId.ToString()));
 
-            //uriParams.Add(new Tuple<string, string>("fields", "ticketId,statusId,subject,customerId,typeId,ticketNumber,appointmentCount,appointments,customStatusId,typeName,ticketStatus,customer{name},serviceLocation{name,fulladdress}"));
+            uriParams.Add(new Tuple<string, string>("fields", "ticketId,statusId,subject,customerId,typeId,ticketNumber,appointmentCount,appointments,customStatusId,typeName,ticketStatus,customer{name},serviceLocation{name,fulladdress}"));
 
             return await GetTicketsAsync(uriParams);
         }
