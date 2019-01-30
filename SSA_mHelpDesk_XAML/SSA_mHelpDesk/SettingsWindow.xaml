@@ -134,10 +134,8 @@
                                 Stroke="Black"
                                 materialDesign:ShadowAssist.ShadowDepth="Depth4"
                                 materialDesign:ShadowAssist.ShadowEdges="All"
-                                DockPanel.Dock="Left">
-                                <Ellipse.Fill>
-                                    <Binding Path="KeyIndicatorColor" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
-                                </Ellipse.Fill>
+                                DockPanel.Dock="Left"
+                                Fill="{Binding Path=KeyIndicatorColor, UpdateSourceTrigger=PropertyChanged}">
                             </Ellipse>
                             <TextBlock
                                        x:Name="AccessTokenValidText"
