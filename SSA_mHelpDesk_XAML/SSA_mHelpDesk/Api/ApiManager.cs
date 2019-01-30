@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SSA_mHelpDesk.API
@@ -177,9 +178,10 @@ namespace SSA_mHelpDesk.API
             string requestUri = sApiBase + uri;
             Console.WriteLine(requestUri);
             int retryCount = 0;
+            Exception errToRethrow = null;
 
-            while (retryCount++ < 4)  // Retry
-            { 
+            while (errToRethrow == null) // Retry
+            {
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUri);
 
                 if (Properties.Settings.Default.Production && Properties.Settings.Default.Bearer_Workaround)
@@ -204,16 +206,23 @@ namespace SSA_mHelpDesk.API
                         return mRawOutput;
                     }
                 }
-                catch (Exception e)
+                catch (WebException webException)
                 {
-                    mLastError = e;
-                    if (e.HResult != -2146233079)// This is wrong code
-                        return e.ToString();
+                    if (webException.Response is HttpWebResponse &&
+                        (int)((HttpWebResponse)webException.Response).StatusCode == 429 && // Only retry on 429 error
+                        retryCount < 3)
+                    {
+                        retryCount++;
+                        Console.WriteLine("429 Error - Trying again in 250ms - Count=" + retryCount);
+                        Thread.Sleep(250);
+                    }
                     else
-                        System.Threading.Thread.Sleep(250);
-                }   
-            }
-            return mLastError.ToString();
+                        errToRethrow = webException;
+                }
+            } //while errToRethrow is null
+
+            //This needs to be outside while look or compiler will complain
+            throw errToRethrow;
         }
     }
 }
