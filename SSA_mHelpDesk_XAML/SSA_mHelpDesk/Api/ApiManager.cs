@@ -58,7 +58,8 @@ namespace SSA_mHelpDesk.API
             DateTime? appointmentStart = null,
             DateTime? appointmentEnd = null,
             DateTime? createStart = null,
-            DateTime? createEnd = null)
+            DateTime? createEnd = null,
+            string fields = "ticketId,statusId,subject,customerId,typeId,ticketNumber,appointmentCount,appointments,customStatusId,typeName,ticketStatus,customer{name},serviceLocation{name,fulladdress}")
         {
             var uriParams = new List<Tuple<string, string>>();
 
@@ -78,7 +79,8 @@ namespace SSA_mHelpDesk.API
             if (statusId.HasValue)
                 uriParams.Add(new Tuple<string, string>("statusId", statusId.ToString()));
 
-            uriParams.Add(new Tuple<string, string>("fields", "ticketId,statusId,subject,customerId,typeId,ticketNumber,appointmentCount,appointments,customStatusId,typeName,ticketStatus,customer{name},serviceLocation{name,fulladdress}"));
+            if (fields != null)
+                uriParams.Add(new Tuple<string, string>("fields", fields));
 
             return await GetTicketsAsync(uriParams);
         }
