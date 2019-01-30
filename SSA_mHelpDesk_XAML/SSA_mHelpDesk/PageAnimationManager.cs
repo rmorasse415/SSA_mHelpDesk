@@ -17,7 +17,6 @@ namespace SSA_mHelpDesk
         private bool _animate = true;
         private Duration _duration = new Duration(TimeSpan.FromMilliseconds(150));
 
-        private bool _allowDirectNavigation = false;
         private object _content = null;
         private readonly ContentControl _frame;
         private readonly UIElement _parent;
