@@ -59,7 +59,7 @@ namespace SSA_mHelpDesk.API
             DateTime? appointmentEnd = null,
             DateTime? createStart = null,
             DateTime? createEnd = null,
-            string fields = "ticketId,statusId,subject,customerId,typeId,ticketNumber,appointmentCount,appointments,customStatusId,typeName,ticketStatus,customer{name},serviceLocation{name,fulladdress}")
+            string fields = "ticketId,statusId,subject,customerId,typeId,ticketNumber,appointmentCount,appointments{id,startUTC,endUTC,teamName},customStatusId,typeName,ticketStatus,customer{name},serviceLocation{name,fulladdress}")
         {
             var uriParams = new List<Tuple<string, string>>();
 
