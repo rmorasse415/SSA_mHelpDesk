@@ -3,6 +3,7 @@ using SSA_mHelpDesk.Domain;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace SSA_mHelpDesk
 {
@@ -45,13 +46,23 @@ namespace SSA_mHelpDesk
             }
         }
 
+        private DispatcherTimer refreshTimer = new DispatcherTimer();
+
         public MainWindow()
         {
             InitializeComponent();
 
             PageState = State.VerifyingAuth;
 
+            refreshTimer.Interval = TimeSpan.FromSeconds(30);
+            refreshTimer.Tick += RefreshTimer_Tick;
+
             mPageAnimationManager = new ContentAnimationManager(this, pageFrame);
+        }
+
+        private void RefreshTimer_Tick(object sender, EventArgs e)
+        {
+            VerifyAuthAndLoad();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -110,16 +121,27 @@ namespace SSA_mHelpDesk
 
                     nextPage = mLoadingPage;
                     mLoadingViewModel.DisplayMessage = "Authenticating...";
+
+                    refreshTimer.Stop();
                     break;
                 case State.LoadingTicketList:
+                    if (mLoadingPage == null)
+                        mLoadingPage = new LoadingPage(mLoadingViewModel);
+
                     nextPage = mLoadingPage;
                     mLoadingViewModel.DisplayMessage = "Refreshing Ticket List...";
+
+                    refreshTimer.Stop();
                     break;
                 case State.LoadingComplete:
                     if (mTicketListPage == null)
                         mTicketListPage = new TicketListPage(mTicketListViewModel);
 
                     nextPage = mTicketListPage;
+                    mTicketListViewModel.ShowRefreshIndicator = false;
+
+                    // This will also restart the timer if it was already running
+                    refreshTimer.Start();
                     break;
                 case State.AuthVerificationFailed:
                     if (mAuthFailedPage == null)
@@ -129,6 +151,8 @@ namespace SSA_mHelpDesk
                     }
 
                     nextPage = mAuthFailedPage;
+
+                    refreshTimer.Stop();
                     break;
                 default:
                     nextPage = null;
@@ -139,9 +163,16 @@ namespace SSA_mHelpDesk
             {
                 pageFrame.Content = nextPage;
             }
+            else if (ReferenceEquals(pageFrame.Content, mTicketListPage) &&
+                ReferenceEquals(nextPage, mLoadingPage))
+            {
+                //don't animate page, just show the refresh indicator
+                mTicketListViewModel.ShowRefreshIndicator = true;
+            }
             else if (!ReferenceEquals(nextPage, pageFrame.Content))
             {
                 //animate to next page
+                mTicketListViewModel.ShowRefreshIndicator = false;
                 mPageAnimationManager.AnimateToContent(nextPage);
             }
         }

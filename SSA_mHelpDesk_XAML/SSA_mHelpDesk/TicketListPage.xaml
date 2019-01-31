@@ -83,47 +83,81 @@
             </Border>
         </DataTemplate>
     </UserControl.Resources>
-    <StackPanel>
-        <!--<materialDesign:Badged Badge="{Binding ToScheduleDataItems.Count}"
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" >
+            <StackPanel Margin="0,0,0,100">
+                <!--<materialDesign:Badged Badge="{Binding ToScheduleDataItems.Count}"
                                Margin="16" 
                                HorizontalAlignment="Stretch" 
                                HorizontalContentAlignment="Stretch">-->
-            <materialDesign:Card Margin="16" Background="{DynamicResource MaterialDesignBackground}">
-            <Expander
+                <materialDesign:Card Margin="16" Background="{DynamicResource MaterialDesignBackground}">
+                    <Expander
                             HorizontalAlignment="Stretch"
                             Header="Schedule Required"
                             Background="PaleVioletRed">
-                <!-- piece together your own items control to create some nice stuff that will make everyone think you are cool. and rightly so, because you are cool.  you might even be a hipster for all I know -->
-                <ItemsControl
+                        <!-- piece together your own items control to create some nice stuff that will make everyone think you are cool. and rightly so, because you are cool.  you might even be a hipster for all I know -->
+                        <ItemsControl
                                   Grid.IsSharedSizeScope="True"
                                   Margin="12 0 12 0"
                                 ItemsSource="{Binding ToScheduleDataItems}"/>
-            </Expander>
-        </materialDesign:Card>
-        <!--</materialDesign:Badged>-->
-        <materialDesign:Card Margin="16" Background="{DynamicResource MaterialDesignBackground}">
-            <Expander
+                    </Expander>
+                </materialDesign:Card>
+                <!--</materialDesign:Badged>-->
+                <materialDesign:Card Margin="16" Background="{DynamicResource MaterialDesignBackground}">
+                    <Expander
                             HorizontalAlignment="Stretch"
                             Header="Today"
                             Background="LightGreen">
-                <!-- piece together your own items control to create some nice stuff that will make everyone think you are cool. and rightly so, because you are cool.  you might even be a hipster for all I know -->
-                <ItemsControl
+                        <!-- piece together your own items control to create some nice stuff that will make everyone think you are cool. and rightly so, because you are cool.  you might even be a hipster for all I know -->
+                        <ItemsControl
                                   Grid.IsSharedSizeScope="True"
                                   Margin="12 0 12 0"
                                 ItemsSource="{Binding TodayDataItems}"/>
-            </Expander>
-        </materialDesign:Card>
-        <materialDesign:Card Margin="16" Background="{DynamicResource MaterialDesignBackground}">
-            <Expander
+                    </Expander>
+                </materialDesign:Card>
+                <materialDesign:Card Margin="16" Background="{DynamicResource MaterialDesignBackground}">
+                    <Expander
                             HorizontalAlignment="Stretch"
                             Header="Fire Inspections"
                             Background="LightYellow">
-                <!-- piece together your own items control to create some nice stuff that will make everyone think you are cool. and rightly so, because you are cool.  you might even be a hipster for all I know -->
-                <ItemsControl
+                        <!-- piece together your own items control to create some nice stuff that will make everyone think you are cool. and rightly so, because you are cool.  you might even be a hipster for all I know -->
+                        <ItemsControl
                                   Grid.IsSharedSizeScope="True"
                                   Margin="12 0 12 0"
                                 ItemsSource="{Binding FireInspectionDataItems}"/>
-            </Expander>
-        </materialDesign:Card>
-    </StackPanel>
+                    </Expander>
+                </materialDesign:Card>
+            </StackPanel>
+        </ScrollViewer>
+        <ProgressBar x:Name="RefreshIndicator" VerticalAlignment="Top" IsIndeterminate="True" Visibility="Collapsed" Height="6">
+            <ProgressBar.Resources>
+                <Style TargetType="{x:Type ProgressBar}" BasedOn="{StaticResource MaterialDesignLinearProgressBar}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ShowRefreshIndicator}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5"/>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.5"/>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0.8" Value="{x:Static Visibility.Collapsed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ProgressBar.Resources>
+        </ProgressBar>
+    </Grid>
 </UserControl>

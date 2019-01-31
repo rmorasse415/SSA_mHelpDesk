@@ -17,26 +17,24 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}" Closed="Window_Closed">
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
 
-            <DockPanel>
-                <materialDesign:ColorZone Padding="16" materialDesign:ShadowAssist.ShadowDepth="Depth2"
+        <DockPanel>
+            <materialDesign:ColorZone Padding="16" materialDesign:ShadowAssist.ShadowDepth="Depth2"
                                                     Mode="PrimaryMid" DockPanel.Dock="Top">
-                    <DockPanel>
-                        <Button
+                <DockPanel>
+                    <Button
                             Style="{DynamicResource MaterialDesignToolForegroundButton}"
                             DockPanel.Dock="Right"
                             Click="Button_Click_Settings">
-                            <materialDesign:PackIcon
+                        <materialDesign:PackIcon
                                         Kind="Settings"
                                         Height="24"
                                         Width="24" />
-                        </Button>
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22">South Shore Alarms mHelpDesk Tool</TextBlock>
-                    </DockPanel>
-                </materialDesign:ColorZone>
-                <ContentControl x:Name="pageFrame"/>
-            </DockPanel>
-        </ScrollViewer>
+                    </Button>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22">South Shore Alarms mHelpDesk Tool</TextBlock>
+                </DockPanel>
+            </materialDesign:ColorZone>
+            <ContentControl x:Name="pageFrame"/>
+        </DockPanel>
     </Grid>
 </Window>

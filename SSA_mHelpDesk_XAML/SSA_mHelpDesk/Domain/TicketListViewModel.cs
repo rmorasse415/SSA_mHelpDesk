@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace SSA_mHelpDesk.Domain
 {
-    public class TicketListViewModel
+    public class TicketListViewModel : INotifyPropertyChanged
     {
         static readonly ApiManager sApiManager = ApiManager.Instance;
 
@@ -21,6 +22,26 @@ namespace SSA_mHelpDesk.Domain
         public ObservableCollection<ObservableTicket> ToScheduleDataItems => _toScheduleDataItems;
         public ObservableCollection<ObservableTicket> TodayDataItems => _todayDataItems;
         public ObservableCollection<ObservableTicket> FireInspectionDataItems => _fireInspectionDataItems;
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public bool _showRefreshIndicator = false;
+        public bool ShowRefreshIndicator { get => _showRefreshIndicator;
+            set
+            {
+                if (value != _showRefreshIndicator)
+                {
+                    _showRefreshIndicator = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         //public class ListFilter
         //{
