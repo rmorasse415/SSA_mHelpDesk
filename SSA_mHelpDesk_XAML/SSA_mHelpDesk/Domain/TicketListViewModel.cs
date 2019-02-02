@@ -48,7 +48,7 @@ namespace SSA_mHelpDesk.Domain
         //    List<String> AcceptableTicketStatus = new List<String>();
         //}
 
-        private void ProcessUpdatedLicketList(List<Ticket> ticketList)
+        private void ProcessUpdatedTicketList(List<Ticket> ticketList)
         {
             var displayLists = new[] { ToScheduleDataItems, TodayDataItems, FireInspectionDataItems };
 
@@ -92,7 +92,7 @@ namespace SSA_mHelpDesk.Domain
 
                     //fetchTicketCustomer(obsTick);
                     //if (t.serviceLocationId != t.customerId)
-                       //BeginFetchTicketServiceLocation(obsTick);
+                    //BeginFetchTicketServiceLocation(obsTick);
 
                     list.Add(obsTick);
                 }
@@ -104,6 +104,34 @@ namespace SSA_mHelpDesk.Domain
                     if (testList.Remove(obsTicket))
                         break; // go to next ticket
         }
+        
+        private void RepairUpdatedTicketList(List<Ticket> ticketList)
+        {
+  
+            foreach (Ticket t in ticketList)
+            {
+                DateTime? nad = t.GetNextAppointmentDate();
+                DateTime today = DateTime.Today;
+
+                if (nad.HasValue)
+                {
+                    if ((nad.Value.Date > today) && (t.ticketStatus == "New"))
+                    {
+                        // Need to change status to New: Scheduled
+                    }
+                }
+                else
+                {
+                    if (t.typeName == "Fire Inspection")
+                    {
+                        //Need to assign
+                    }
+                }
+
+
+            }
+
+        }
 
         private ObservableCollection<ObservableTicket> DetermineTicketList(Ticket ticket)
         {
@@ -114,13 +142,19 @@ namespace SSA_mHelpDesk.Domain
             if (ticket.ticketStatus == "Closed: Invoices with Quickbooks")
                 return null;
 
+            /*
+             * Fire Inspections: with a NAD in the past and status of != New: Scheduled
+             * go on the Red List other wise they go on the Fire Inspection List
+             * 
+             * All Other Tickets with a New, Scheduled, Confirm Schedule, Waiting for parts, Open Confirm Schedule, En:route, In-Progress, 
+             * Job Complete, Rescheduled, Return Needed:If there is NO NAD or NAD in Past they go to ToBeScheduled, IF NAD is Today they go to Today List
+             * else no List
+             */
+
             if (!nad.HasValue)
             {
-                if (ticket.typeName == "Fire Inspection")
-                    //                    return FireInspectionDataItems;
-                    return null;
 
-                if (ticket.ticketStatus == "New" ||
+                if ((ticket.ticketStatus == "New" ||
                     ticket.ticketStatus == "New: Scheduled" ||
                     ticket.ticketStatus == "New: ConfirmSchedule" ||
                     ticket.ticketStatus == "New: Waiting For Parts" ||
@@ -129,12 +163,17 @@ namespace SSA_mHelpDesk.Domain
                     ticket.ticketStatus == "Open: In-Progress" ||
                     ticket.ticketStatus == "Open: Job Complete" ||
                     ticket.ticketStatus == "Open: Rescheduled" ||
-                    ticket.ticketStatus == "Open: Return Needed")
+                    ticket.ticketStatus == "Open: Return Needed") &&
+
+                    (ticket.typeName != "Fire Inspection"))
+
                 {
                     return ToScheduleDataItems;
                 }
+                else if (ticket.typeName == "Fire Inspection")
+                    return FireInspectionDataItems;
 
-            }
+        }
             else
             {
                 if (nad.Value.Date == today)
@@ -160,6 +199,10 @@ namespace SSA_mHelpDesk.Domain
                         return ToScheduleDataItems;
                     }
                 }
+                else if (ticket.typeName == "Fire Inspection")
+                    return FireInspectionDataItems;
+                //return null;
+
             }
             return null;
         }
@@ -172,7 +215,8 @@ namespace SSA_mHelpDesk.Domain
             if (ticketList != null)
             {
                 //Clipboard.SetText(sApiManager.GetLastRawOutput());
-                ProcessUpdatedLicketList(ticketList);
+                RepairUpdatedTicketList(ticketList);
+                ProcessUpdatedTicketList(ticketList);
                 return ticketList.Count;
             }
             else
