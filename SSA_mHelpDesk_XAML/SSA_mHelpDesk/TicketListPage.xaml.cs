@@ -27,5 +27,6 @@ namespace SSA_mHelpDesk
 
             DataContext = viewModel;
         }
+
     }
 }

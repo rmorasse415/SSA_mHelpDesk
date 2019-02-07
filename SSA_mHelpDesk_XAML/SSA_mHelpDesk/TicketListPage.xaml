@@ -39,6 +39,7 @@
                                                     <ColumnDefinition Width="20*"/>
                                                     <ColumnDefinition Width="25*"/>
                                                     <ColumnDefinition Width="18*"/>
+                                                    <ColumnDefinition Width="18*"/>
                                                     <ColumnDefinition Width="17*"/>
                                                     <ColumnDefinition Width="20*"/>
                                                     <ColumnDefinition Width="12*"/>
@@ -46,9 +47,10 @@
                                                 <TextBlock Grid.Column="0" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Customer Name" />
                                                 <TextBlock Grid.Column="1" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Service Address" />
                                                 <TextBlock Grid.Column="2" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Subject"/>
-                                                <TextBlock Grid.Column="3" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Ticket Status"/>
-                                                <TextBlock Grid.Column="4" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Next Appointment Date"/>
-                                                <TextBlock Grid.Column="5" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Job Number"/>
+                                                <TextBlock Grid.Column="3" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Job Type"/>
+                                                <TextBlock Grid.Column="4" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Ticket Status"/>
+                                                <TextBlock Grid.Column="5" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Next Appointment Date"/>
+                                                <TextBlock Grid.Column="6" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Job Number"/>
                                             </Grid>
                                             <Separator Background="Black"/>
                                         </StackPanel>
@@ -69,6 +71,7 @@
                         <ColumnDefinition Width="20*"/>
                         <ColumnDefinition Width="25*"/>
                         <ColumnDefinition Width="18*"/>
+                        <ColumnDefinition Width="18*"/>
                         <ColumnDefinition Width="17*"/>
                         <ColumnDefinition Width="20*"/>
                         <ColumnDefinition Width="12*"/>
@@ -76,9 +79,10 @@
                     <TextBlock Grid.Column="0" Margin="4,0,4,0" TextWrapping="Wrap" Text="{Binding CustomerName}" />
                     <TextBlock Grid.Column="1" Margin="4,0,4,0" TextWrapping="Wrap" Text="{Binding ServiceAddress}" />
                     <TextBlock Grid.Column="2" Margin="4,0,4,0" TextWrapping="Wrap" Text="{Binding Subject}"/>
-                    <TextBlock Grid.Column="3" Margin="4,0,4,0" TextWrapping="Wrap" Text="{Binding TicketStatus}"/>
-                    <TextBlock Grid.Column="4" Margin="4,0,4,0" TextWrapping="Wrap" Text="{Binding NextAppointmentDate}"/>
-                    <TextBlock Grid.Column="5" Margin="4,0,4,0" TextWrapping="Wrap" Text="{Binding JobNumber}"/>
+                    <TextBlock Grid.Column="3" Margin="4,0,4,0" TextWrapping="Wrap" Text="{Binding TicketType}"/>
+                    <TextBlock Grid.Column="4" Margin="4,0,4,0" TextWrapping="Wrap" Text="{Binding TicketStatus}"/>
+                    <TextBlock Grid.Column="5" Margin="4,0,4,0" TextWrapping="Wrap" Text="{Binding NextAppointmentDate}"/>
+                    <TextBlock Grid.Column="6" Margin="4,0,4,0" TextWrapping="Wrap" Text="{Binding JobNumber}"/>
                 </Grid>
             </Border>
         </DataTemplate>

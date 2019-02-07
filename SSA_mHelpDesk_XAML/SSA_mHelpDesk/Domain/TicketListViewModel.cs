@@ -304,6 +304,15 @@ namespace SSA_mHelpDesk.Domain
             }
         }
 
+        public String TicketType
+        {
+            get
+            {
+            
+                return _ticket.typeName; // TODO print something if null
+            }
+        }
+
         public String ServiceAddress
         {
             get
