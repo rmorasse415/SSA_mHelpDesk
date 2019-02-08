@@ -101,8 +101,8 @@
                             Background="PaleVioletRed">
                         <!-- piece together your own items control to create some nice stuff that will make everyone think you are cool. and rightly so, because you are cool.  you might even be a hipster for all I know -->
                         <ItemsControl
-                                  Grid.IsSharedSizeScope="True"
-                                  Margin="12 0 12 0"
+                                  Grid.IsSharedSizeScope="True" MouseLeftButtonDown="ItemsControl_MouseLeftButtonDown"
+                                  Margin="12 0 12 0" 
                                 ItemsSource="{Binding ToScheduleDataItems}"/>
                     </Expander>
                 </materialDesign:Card>
@@ -114,7 +114,7 @@
                             Background="LightGreen">
                         <!-- piece together your own items control to create some nice stuff that will make everyone think you are cool. and rightly so, because you are cool.  you might even be a hipster for all I know -->
                         <ItemsControl
-                                  Grid.IsSharedSizeScope="True"
+                                  Grid.IsSharedSizeScope="True" MouseLeftButtonDown="ItemsControl_MouseLeftButtonDown"
                                   Margin="12 0 12 0"
                                 ItemsSource="{Binding TodayDataItems}"/>
                     </Expander>
@@ -126,7 +126,7 @@
                             Background="LightYellow">
                         <!-- piece together your own items control to create some nice stuff that will make everyone think you are cool. and rightly so, because you are cool.  you might even be a hipster for all I know -->
                         <ItemsControl
-                                  Grid.IsSharedSizeScope="True"
+                                  Grid.IsSharedSizeScope="True" MouseLeftButtonDown="ItemsControl_MouseLeftButtonDown"
                                   Margin="12 0 12 0"
                                 ItemsSource="{Binding FireInspectionDataItems}"/>
                     </Expander>

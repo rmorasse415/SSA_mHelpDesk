@@ -13,7 +13,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
 namespace SSA_mHelpDesk
 {
     /// <summary>
@@ -28,5 +27,13 @@ namespace SSA_mHelpDesk
             DataContext = viewModel;
         }
 
+        private void ItemsControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            System.Windows.Controls.TextBlock Txt = e.OriginalSource as TextBlock;
+            ObservableTicket Ticket = Txt.DataContext as ObservableTicket;
+            Clipboard.SetText(Ticket.JobNumber);
+            MessageBox.Show(Ticket.JobNumber);
+
+        }
     }
 }
