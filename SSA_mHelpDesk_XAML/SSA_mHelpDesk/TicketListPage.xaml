@@ -15,6 +15,9 @@
       TextOptions.TextRenderingMode="Auto"        
       Background="{DynamicResource MaterialDesignPaper}"
       FontFamily="{DynamicResource MaterialDesignFont}">
+    
+  
+
     <UserControl.Resources>
         <Style TargetType="ItemsControl">
             <Style.Triggers>
@@ -33,7 +36,7 @@
                             <ControlTemplate>
                                 <StackPanel>
                                     <Border Padding="8,0,8,4" >
-                                        <StackPanel>
+                                        <StackPanel> 
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="20*"/>
@@ -49,7 +52,7 @@
                                                 <TextBlock Grid.Column="2" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Subject"/>
                                                 <TextBlock Grid.Column="3" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Job Type"/>
                                                 <TextBlock Grid.Column="4" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Ticket Status"/>
-                                                <TextBlock Grid.Column="5" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Next Appointment Date"/>
+                                                <TextBlock Grid.Column="5" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Next Appointment"/>
                                                 <TextBlock Grid.Column="6" Foreground="#000000" VerticalAlignment="Bottom" FontSize="18" Margin="4,0,4,0" TextWrapping="WrapWithOverflow" Text="Job Number"/>
                                             </Grid>
                                             <Separator Background="Black"/>
@@ -67,8 +70,8 @@
             <Border
 		        Padding="8">
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="20*"/>
+                    <Grid.ColumnDefinitions> 
+                        <ColumnDefinition Width="20*" />
                         <ColumnDefinition Width="25*"/>
                         <ColumnDefinition Width="18*"/>
                         <ColumnDefinition Width="18*"/>

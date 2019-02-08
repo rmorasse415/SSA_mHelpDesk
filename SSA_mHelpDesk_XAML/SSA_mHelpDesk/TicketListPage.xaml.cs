@@ -31,8 +31,11 @@ namespace SSA_mHelpDesk
         {
             System.Windows.Controls.TextBlock Txt = e.OriginalSource as TextBlock;
             ObservableTicket Ticket = Txt.DataContext as ObservableTicket;
-            Clipboard.SetText(Ticket.JobNumber);
-            MessageBox.Show(Ticket.JobNumber);
+            if (Ticket != null)
+            {
+                Clipboard.SetText(Ticket.JobNumber);
+                Console.Beep();
+            }
 
         }
     }
