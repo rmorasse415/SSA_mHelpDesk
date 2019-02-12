@@ -170,8 +170,8 @@ namespace SSA_mHelpDesk.Domain
                 {
                     return ToScheduleDataItems;
                 }
-                else if (ticket.typeName == "Fire Inspection")
-                    return FireInspectionDataItems;
+               // else if (ticket.typeName == "Fire Inspection")
+               //     return FireInspectionDataItems;
 
         }
             else
