@@ -33,7 +33,7 @@ namespace SSA_mHelpDesk
             ObservableTicket Ticket = Txt.DataContext as ObservableTicket;
             if (Ticket != null)
             {
-                Clipboard.SetText(Ticket.JobNumber);
+              Clipboard.SetText(Ticket.JobNumber);
                 Console.Beep();
             }
 
