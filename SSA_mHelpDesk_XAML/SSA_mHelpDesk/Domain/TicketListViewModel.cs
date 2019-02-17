@@ -139,7 +139,10 @@ namespace SSA_mHelpDesk.Domain
 
             DateTime? nad = ticket.GetNextAppointmentDate();
 
-            if (ticket.ticketStatus == "Closed: Invoices with Quickbooks")
+            if ((ticket.ticketStatus.StartsWith("Closed")) ||
+                (ticket.ticketStatus == "Template") ||
+                (ticket.ticketStatus == "Withdrawn"))
+
                 return null;
 
             /*
@@ -153,27 +156,9 @@ namespace SSA_mHelpDesk.Domain
 
             if (!nad.HasValue)
             {
-
-                if ((ticket.ticketStatus == "New" ||
-                    ticket.ticketStatus == "New: Scheduled" ||
-                    ticket.ticketStatus == "New: ConfirmSchedule" ||
-                    ticket.ticketStatus == "New: Waiting For Parts" ||
-                    ticket.ticketStatus == "Open: Confirm Schedule" ||
-                    ticket.ticketStatus == "Open: En Route" ||
-                    ticket.ticketStatus == "Open: In-Progress" ||
-                    ticket.ticketStatus == "Open: Job Complete" ||
-                    ticket.ticketStatus == "Open: Rescheduled" ||
-                    ticket.ticketStatus == "Open: Return Needed") &&
-
-                    (ticket.typeName != "Fire Inspection"))
-
-                {
-                    return ToScheduleDataItems;
-                }
-               // else if (ticket.typeName == "Fire Inspection")
-               //     return FireInspectionDataItems;
-
-        }
+                if (ticket.ticketStatus != "Fire Inspection")
+                   return ToScheduleDataItems;
+            }
             else
             {
                 if (nad.Value.Date == today)
@@ -184,20 +169,11 @@ namespace SSA_mHelpDesk.Domain
                 //                    return ToScheduleDataItems;
 
 
-                else if (nad.Value.Date < today)
+                else if (((nad.Value.Date < today) &&
+                          (!ticket.ticketStatus.Contains("Job Complete"))) ||
+                        (nad.Value.Date.AddDays(5) < today)) 
                 {
-                    if (ticket.ticketStatus == "New" ||
-                        ticket.ticketStatus == "New: Scheduled" ||
-                        ticket.ticketStatus == "New: ConfirmSchedule" ||
-                        ticket.ticketStatus == "New: Waiting For Parts" ||
-                        ticket.ticketStatus == "Open: Confirm Schedule" ||
-                        ticket.ticketStatus == "Open: En Route" ||
-                        ticket.ticketStatus == "Open: In-Progress" ||
-                        ticket.ticketStatus == "Open: Rescheduled" ||
-                        ticket.ticketStatus == "Open: Return Needed")
-                    {
                         return ToScheduleDataItems;
-                    }
                 }
                 else if (ticket.typeName == "Fire Inspection")
                     return FireInspectionDataItems;
