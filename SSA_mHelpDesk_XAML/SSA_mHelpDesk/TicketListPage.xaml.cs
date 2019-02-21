@@ -30,11 +30,14 @@ namespace SSA_mHelpDesk
         private void ItemsControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             System.Windows.Controls.TextBlock Txt = e.OriginalSource as TextBlock;
-            ObservableTicket Ticket = Txt.DataContext as ObservableTicket;
-            if (Ticket != null)
-            {
-              Clipboard.SetText(Ticket.JobNumber);
-                Console.Beep();
+            if (Txt != null)
+            {         
+                ObservableTicket Ticket = Txt.DataContext as ObservableTicket;
+                if (Ticket != null)
+                {
+                    Clipboard.SetText(Ticket.JobNumber);
+                    Console.Beep();
+                }
             }
 
         }

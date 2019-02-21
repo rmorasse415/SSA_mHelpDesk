@@ -186,7 +186,7 @@ namespace SSA_mHelpDesk.Domain
         public async Task<int> RefreshTicketsAsync()
         {
             var ticketList = await sApiManager.GetTicketsAsync( //createStart: Convert.ToDateTime("1/1/2020")
-                                               appointmentStart: Convert.ToDateTime("1/1/2020")
+                                               appointmentStart: Convert.ToDateTime("2/20/2018"), appointmentEnd: Convert.ToDateTime("01/01/2020")
                                                );
             if (ticketList != null)
             {

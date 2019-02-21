@@ -21,22 +21,82 @@
     <UserControl.Resources>
 
         <Style x:Key="DGCellStyle" TargetType="{x:Type DataGridCell}">
-            <Setter Property="Background" Value="PaleVioletRed"/>
-            <Setter Property="Height" Value="40" />
-            <Setter Property="BorderThickness" Value="0 0 0 0"/>
             <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Transparent"/>
+                </Trigger>
                 <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="PaleVioletRed"/>
+                    <Setter Property="Foreground" Value="Black"/>
                 </Trigger>
             </Style.Triggers>
+            <Setter Property="MinHeight" Value="35" /> 
+            <Setter Property="MaxHeight" Value="70" />
+            <Setter Property="BorderThickness" Value="0 0 0 0"/>
         </Style>
 
-        <DataGridTextColumn Width="20*" x:Key="dgCol0" Header="Customer Name"  Binding="{Binding CustomerName}" CellStyle="{StaticResource DGCellStyle}"/>
-        <DataGridTextColumn Width="25*" x:Key="dgCol1" Header="Service Address" Binding="{Binding ServiceAddress}" CellStyle="{StaticResource DGCellStyle}"/>
-        <DataGridTextColumn Width="18*" x:Key="dgCol2" Header="Subject" Binding="{Binding Subject}" CellStyle="{StaticResource DGCellStyle}"/>
-        <DataGridTextColumn Width="16*" x:Key="dgCol3" Header="Job Type" Binding="{Binding TicketType}" CellStyle="{StaticResource DGCellStyle}"/>
-        <DataGridTextColumn Width="12*" x:Key="dgCol4" Header="Status" Binding="{Binding TicketStatus}" CellStyle="{StaticResource DGCellStyle}"/>
-        <DataGridTextColumn Width="20*" x:Key="dgCol5" Header="Next Appointment" Binding="{Binding NextAppointmentDate}" CellStyle="{StaticResource DGCellStyle}"/>
-        <DataGridTextColumn Width="12*" x:Key="dgCol6" Header="Job Number" Binding="{Binding JobNumber}" CellStyle="{StaticResource DGCellStyle}"/>
+        <DataGridTextColumn Width="20*" x:Key="dgCol0" Header="Customer Name"  Binding="{Binding CustomerName}" CellStyle="{StaticResource DGCellStyle}">
+            <DataGridTextColumn.ElementStyle>
+                <Style TargetType="TextBlock">
+                    <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+                    <Setter Property="Margin" Value="4"/>
+                </Style>
+            </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
+            
+        <DataGridTextColumn Width="25*" x:Key="dgCol1" Header="Service Address" Binding="{Binding ServiceAddress}" CellStyle="{StaticResource DGCellStyle}">
+        <DataGridTextColumn.ElementStyle>
+            <Style TargetType="TextBlock">
+                    <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+                    <Setter Property="Margin" Value="4"/>
+            </Style>
+            </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
+
+        <DataGridTextColumn Width="18*" x:Key="dgCol2" Header="Subject" Binding="{Binding Subject}" CellStyle="{StaticResource DGCellStyle}">
+        <DataGridTextColumn.ElementStyle>
+            <Style TargetType="TextBlock">
+                    <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+                    <Setter Property="Margin" Value="4"/>
+            </Style>
+        </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
+
+        <DataGridTextColumn Width="16*" x:Key="dgCol3" Header="Job Type" Binding="{Binding TicketType}" CellStyle="{StaticResource DGCellStyle}">
+        <DataGridTextColumn.ElementStyle>
+            <Style TargetType="TextBlock">
+                    <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+                    <Setter Property="Margin" Value="4"/>
+            </Style>
+        </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
+
+        <DataGridTextColumn Width="12*" x:Key="dgCol4" Header="Status" Binding="{Binding TicketStatus}" CellStyle="{StaticResource DGCellStyle}">
+            <DataGridTextColumn.ElementStyle>
+                <Style TargetType="TextBlock">
+                    <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+                    <Setter Property="Margin" Value="4"/>
+                </Style>
+            </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
+
+        <DataGridTextColumn Width="20*" x:Key="dgCol5" Header="Next Appointment" Binding="{Binding NextAppointmentDate}" CellStyle="{StaticResource DGCellStyle}">
+            <DataGridTextColumn.ElementStyle>
+                <Style TargetType="TextBlock">
+                    <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+                    <Setter Property="Margin" Value="4"/>
+                </Style>
+            </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
+
+        <DataGridTextColumn Width="12*" x:Key="dgCol6" Header="Job Number" Binding="{Binding JobNumber}" CellStyle="{StaticResource DGCellStyle}">
+            <DataGridTextColumn.ElementStyle>
+                <Style TargetType="TextBlock">
+                    <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+                    <Setter Property="Margin" Value="4"/>
+                </Style>
+            </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
 
 
         <!--<Style TargetType="DataGrid">
@@ -141,7 +201,7 @@
                             Background="PaleVioletRed">
                         <!-- piece together your own items control to create some nice stuff that will make everyone think you are cool. and rightly so, because you are cool.  you might even be a hipster for all I know -->
                         <DataGrid GridLinesVisibility="None"
-                               Grid.IsSharedSizeScope="True" MouseLeftButtonDown="ItemsControl_MouseLeftButtonDown"
+                               Grid.IsSharedSizeScope="True"  PreviewMouseDown="ItemsControl_MouseLeftButtonDown"
                                   Margin="12 0 12 0" 
                                 ItemsSource="{Binding ToScheduleDataItems}" Background="PaleVioletRed" BorderThickness="0"  IsReadOnly="True" AutoGenerateColumns="False">
                             <DataGrid.Columns>
