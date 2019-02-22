@@ -13,15 +13,15 @@ namespace SSA_mHelpDesk.API
 {
     public sealed class ApiManager
     {
+        private const string prodApiBase = "https://connect.mhelpdesk.com/api/v1.0/";
+        private const string preprodApiBase = "https://preprod-secure1.mhelpdesk.com/api/api/v1.0/";
+
         private static readonly Lazy<ApiManager> lazy =
             new Lazy<ApiManager>(() => new ApiManager());
 
         public static ApiManager Instance { get { return lazy.Value; } }
 
         private readonly AuthenticationManager mAuthManager = AuthenticationManager.Instance;
-
-        private static readonly string sPortalId = UserSettings.PortalId; // 88463;
-        private static readonly string sApiBase = Properties.Settings.Default.Production ? "https://connect.mhelpdesk.com/api/v1.0/" : "https://preprod-secure1.mhelpdesk.com/api/api/v1.0/";
 
         private Exception mLastError = null;
         private String mRawOutput;
@@ -63,18 +63,19 @@ namespace SSA_mHelpDesk.API
         {
             var uriParams = new List<Tuple<string, string>>();
 
+            const string dateFormat = "yyyy-MM-ddTHH:mm:ss+00:00";
+
             if (appointmentStart.HasValue)
-                uriParams.Add(new Tuple<string, string>("appointmentStart", appointmentStart.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss+00:00")));
+                uriParams.Add(new Tuple<string, string>("appointmentStart", appointmentStart.Value.ToUniversalTime().ToString(dateFormat)));
 
             if (appointmentEnd.HasValue)
-                uriParams.Add(new Tuple<string, string>("appointmentEnd", appointmentEnd.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss+00:00")));
+                uriParams.Add(new Tuple<string, string>("appointmentEnd", appointmentEnd.Value.ToUniversalTime().ToString(dateFormat)));
 
             if (createStart.HasValue)
-                uriParams.Add(new Tuple<string, string>("createStart", createStart.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss+00:00")));
-            //uriParams.Add("appointmentStart", "2014-01-25T12:35:35+00:00");
+                uriParams.Add(new Tuple<string, string>("createStart", createStart.Value.ToUniversalTime().ToString(dateFormat)));
 
             if (createEnd.HasValue)
-                uriParams.Add(new Tuple<string, string>("createEnd", createEnd.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss+00:00")));
+                uriParams.Add(new Tuple<string, string>("createEnd", createEnd.Value.ToUniversalTime().ToString(dateFormat)));
 
             if (statusId.HasValue)
                 uriParams.Add(new Tuple<string, string>("statusId", statusId.ToString()));
@@ -87,7 +88,7 @@ namespace SSA_mHelpDesk.API
 
         private async Task<List<Ticket>> GetTicketsAsync(List<Tuple<string, string>> uriParams)
         {
-            string apiReqUri = "portal/0" + sPortalId + "/tickets";
+            string apiReqUri = "portal/" + UserSettings.PortalId + "/tickets";
            
             if (uriParams.Count > 0)
             {
@@ -124,7 +125,7 @@ namespace SSA_mHelpDesk.API
 
         public async Task<Customer> GetCustomerAsync(int customerId)
         {
-            string apiReqUri = "portal/" + sPortalId + "/customers/" + customerId;
+            string apiReqUri = "portal/" + UserSettings.PortalId + "/customers/" + customerId;
 
             Exception prevError = GetLastError();
             ClearLastError();
@@ -149,7 +150,7 @@ namespace SSA_mHelpDesk.API
 
         public async Task<ServiceLocation> GetServiceLocationAsync(int customerId, int serviceLocationId)
         {
-            string apiReqUri = "portal/" + sPortalId + "/customers/" + customerId + "/servicelocations/" + serviceLocationId;
+            string apiReqUri = "portal/" + UserSettings.PortalId + "/customers/" + customerId + "/servicelocations/" + serviceLocationId;
 
             Exception prevError = GetLastError();
             ClearLastError();
@@ -177,7 +178,8 @@ namespace SSA_mHelpDesk.API
         {
             var authInfo = await mAuthManager.GetAuthInfoAsync();
 
-            string requestUri = sApiBase + uri;
+            string apiBase = UserSettings.Production ? prodApiBase : preprodApiBase;
+            string requestUri = apiBase + uri;
             Console.WriteLine(requestUri);
             int retryCount = 0;
             Exception errToRethrow = null;
@@ -186,7 +188,7 @@ namespace SSA_mHelpDesk.API
             {
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUri);
 
-                if (Properties.Settings.Default.Production && Properties.Settings.Default.Bearer_Workaround)
+                if (UserSettings.Production && UserSettings.Bearer_Workaround)
                     request.Headers.Add("Authorization: bearer " + authInfo?.AccessToken); //lowercase 'b' to work around issue
                 else
                     request.Headers.Add("Authorization: Bearer " + authInfo?.AccessToken);
