@@ -187,9 +187,9 @@
     </UserControl.Resources>
     
     <Grid>
-        
-        <ScrollViewer VerticalScrollBarVisibility="Auto" >
-            <StackPanel Margin="0,0,0,100" Background="Bisque">
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Background="Bisque">
+            <StackPanel Margin="0,0,0,100">
                 <!--<materialDesign:Badged Badge="{Binding ToScheduleDataItems.Count}"
                                Margin="16" 
                                HorizontalAlignment="Stretch" 
