@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SSA_mHelpDesk"
         xmlns:domain="clr-namespace:SSA_mHelpDesk.Domain"
         mc:Ignorable="d"
-        Title="Settings" Height="519" Width="635"
+        Title="Settings" Height="613" Width="635"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -23,7 +23,7 @@
         <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,0,8"
                       x:Name="ScrollViewer">
             <StackPanel Grid.Row="0" Margin="8">
-                <GroupBox Header="Account Information" Margin="0,0,0,16" x:Name="AccountInfoGroup">
+                <GroupBox Header="Account Information" Margin="0,0,0,16">
                     <StackPanel>
                         <PasswordBox 
                         x:Name="ApiKey"
@@ -177,6 +177,23 @@
                                 Margin="16,0,0,0" 
                                 Visibility="Collapsed">Refresh Now</Button>
                         </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Options" Margin="0,0,0,16">
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox x:Name="AutoRefreshCheckbox" Margin="0,0,24,0" IsChecked="True" Content="Auto Refresh" VerticalAlignment="Center" Unchecked="AutoRefreshCheckbox_Unchecked" Checked="AutoRefreshCheckbox_Checked"/>
+                        <Label Content="Refresh period (seconds):" IsEnabled="{Binding IsChecked, ElementName=AutoRefreshCheckbox}"/>
+                        <TextBox x:Name="RefreshSeconds" materialDesign:ValidationAssist.Suppress="True" MaxLength="4" IsEnabled="{Binding IsChecked, ElementName=AutoRefreshCheckbox}" MinWidth="60">
+                            <TextBox.Text>
+                                <Binding RelativeSource="{RelativeSource Self}" Path="Text"
+                                    UpdateSourceTrigger="Explicit" ValidatesOnDataErrors="True">
+                                    <Binding.ValidationRules>
+                                        <domain:NumericValidationRule Min="10" ValidatesOnTargetUpdated="True"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <!--<Label Content="seconds" IsEnabled="{Binding IsChecked, ElementName=AutoRefreshCheckbox}"/>-->
                     </StackPanel>
                 </GroupBox>
             </StackPanel>

@@ -51,5 +51,7 @@ namespace SSA_mHelpDesk.Utils
         public static string PortalId { get => _accountInfo.portalId; set => _accountInfo.portalId = value; }
         public static bool Production { get => Properties.Settings.Default.Production; set => Properties.Settings.Default.Production = value; }
         public static bool Bearer_Workaround { get => Properties.Settings.Default.Bearer_Workaround; set => Properties.Settings.Default.Bearer_Workaround = value; }
+        public static bool AutoRefresh { get => Properties.Settings.Default.AutoRefresh; set => Properties.Settings.Default.AutoRefresh = value; }
+        public static TimeSpan AutoRefreshPeriod { get => Properties.Settings.Default.AutoRefreshPeriod; set => Properties.Settings.Default.AutoRefreshPeriod = value; }
     }
 }

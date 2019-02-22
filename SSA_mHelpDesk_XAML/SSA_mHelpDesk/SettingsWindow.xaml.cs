@@ -74,6 +74,17 @@ namespace SSA_mHelpDesk
                 return;
             }
 
+            if (Validation.GetHasError(RefreshSeconds))
+            {
+                return;
+            }
+
+            double refreshSecondsVal;
+            if (!Double.TryParse(RefreshSeconds.Text, out refreshSecondsVal))
+            {
+                return;
+            }
+
             if (!mAuthManager.IsAuthValid(AuthInfo))
             {
                 // The user is trying to save with an invalid AuthInfo
@@ -86,6 +97,9 @@ namespace SSA_mHelpDesk
             UserSettings.PortalId = PortalId.Text;
             UserSettings.Production = (AccountType.SelectedIndex == 0);
             UserSettings.Bearer_Workaround = BearerWorkaround.IsChecked ?? true;
+            UserSettings.AutoRefresh = (AutoRefreshCheckbox.IsChecked == true);
+
+            UserSettings.AutoRefreshPeriod = TimeSpan.FromSeconds(refreshSecondsVal);
 
             UserSettings.Save();
 
@@ -111,6 +125,9 @@ namespace SSA_mHelpDesk
             BearerWorkaround.IsChecked = UserSettings.Bearer_Workaround;
 
             KeyIndicatorColor = new SolidColorBrush(sKeyNotValidColor);
+
+            AutoRefreshCheckbox.IsChecked = UserSettings.AutoRefresh;
+            RefreshSeconds.Text = ((int)UserSettings.AutoRefreshPeriod.TotalSeconds).ToString();
 
             BeginFetchAuthInfo();
 
@@ -217,6 +234,18 @@ namespace SSA_mHelpDesk
                 UserSettings.ApiKey = initApiKey;
                 UserSettings.ApiSecret = initApiSecret;
             }
+        }
+
+        private void AutoRefreshCheckbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (RefreshSeconds != null)
+                Validation.ClearInvalid(RefreshSeconds.GetBindingExpression(TextBox.TextProperty));
+        }
+
+        private void AutoRefreshCheckbox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (RefreshSeconds != null)
+                RefreshSeconds.GetBindingExpression(TextBox.TextProperty).UpdateSource();
         }
     }
 }

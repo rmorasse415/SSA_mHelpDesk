@@ -1,5 +1,6 @@
 ﻿using SSA_mHelpDesk.API;
 using SSA_mHelpDesk.Domain;
+using SSA_mHelpDesk.Utils;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -54,7 +55,6 @@ namespace SSA_mHelpDesk
 
             PageState = State.VerifyingAuth;
 
-            refreshTimer.Interval = TimeSpan.FromSeconds(30);
             refreshTimer.Tick += RefreshTimer_Tick;
 
             mPageAnimationManager = new ContentAnimationManager(this, pageFrame);
@@ -141,7 +141,11 @@ namespace SSA_mHelpDesk
                     mTicketListViewModel.ShowRefreshIndicator = false;
 
                     // This will also restart the timer if it was already running
-                    refreshTimer.Start();
+                    if (UserSettings.AutoRefresh)
+                    {
+                        refreshTimer.Interval = UserSettings.AutoRefreshPeriod;
+                        refreshTimer.Start();
+                    }
                     break;
                 case State.AuthVerificationFailed:
                     if (mAuthFailedPage == null)

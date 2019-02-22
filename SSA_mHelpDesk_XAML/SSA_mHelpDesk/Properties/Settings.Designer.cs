@@ -46,5 +46,29 @@ namespace SSA_mHelpDesk.Properties {
                 this["Bearer_Workaround"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AutoRefresh {
+            get {
+                return ((bool)(this["AutoRefresh"]));
+            }
+            set {
+                this["AutoRefresh"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:00:30")]
+        public global::System.TimeSpan AutoRefreshPeriod {
+            get {
+                return ((global::System.TimeSpan)(this["AutoRefreshPeriod"]));
+            }
+            set {
+                this["AutoRefreshPeriod"] = value;
+            }
+        }
     }
 }
