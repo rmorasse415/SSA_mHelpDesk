@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -59,7 +60,7 @@ namespace SSA_mHelpDesk.API
             DateTime? appointmentEnd = null,
             DateTime? createStart = null,
             DateTime? createEnd = null,
-            string fields = "ticketId,statusId,subject,assignedTo,customerId,typeId,ticketNumber,appointmentCount,appointments{id,startUTC,endUTC,teamName},customStatusId,typeName,ticketStatus,customer{name},serviceLocation{name,fulladdress}")
+            string fields = "ticketId,statusId,subject,assignedTo,customerId,creationDate,typeId,ticketNumber,appointmentCount,appointments{id,startUTC,endUTC,teamName},customStatusId,typeName,ticketStatus,customer{name},serviceLocation{name,fulladdress}")
         {
             var uriParams = new List<Tuple<string, string>>();
 
@@ -148,6 +149,33 @@ namespace SSA_mHelpDesk.API
             }
         }
 
+        public async Task<List<History>> GetHistoryAsync(int ticketId)
+        {
+            string apiReqUri = "portal/" + UserSettings.PortalId + "/tickets/" + ticketId + "/log";
+
+            Exception prevError = GetLastError();
+            ClearLastError();
+
+            string resultStr = await ApiRequestAsync(apiReqUri);
+
+            try
+            {
+ 
+
+                ResultList<History>historylist = JsonConvert.DeserializeObject<ResultList<History>>(resultStr);
+                SetLastError(prevError);
+                return historylist.results;
+            }
+            catch (Exception ex)
+            {
+                //leave error from apiRequest
+                if (mLastError == null)
+                    mLastError = ex;
+
+                return null;
+            }
+        }
+
         public async Task<ServiceLocation> GetServiceLocationAsync(int customerId, int serviceLocationId)
         {
             string apiReqUri = "portal/" + UserSettings.PortalId + "/customers/" + customerId + "/servicelocations/" + serviceLocationId;
@@ -174,6 +202,65 @@ namespace SSA_mHelpDesk.API
         }
 
         //public?
+       
+
+        public async Task<string> ApiRequestAsync(string uri)
+        {
+            var authInfo = await mAuthManager.GetAuthInfoAsync();
+
+            var apiBase = new Uri (UserSettings.Production ? prodApiBase : preprodApiBase);
+            string requestUri = apiBase + uri;
+            Console.WriteLine(requestUri);
+            int retryCount = 0;
+            Exception errToRethrow = null;
+
+            while (errToRethrow == null) // Retry
+            {
+
+                //request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
+                try
+                {
+                    using (var httpClient = new HttpClient { BaseAddress = apiBase })
+
+                    {
+                        if (UserSettings.Production && UserSettings.Bearer_Workaround)
+                            httpClient.SetToken("bearer", authInfo?.AccessToken);
+                        else
+                            httpClient.SetToken("Bearer", authInfo?.AccessToken);
+                        using (var response = await httpClient.GetAsync(uri))
+                        {
+                            string responseData = await response.Content.ReadAsStringAsync();
+                            lock (this)
+                            {
+                                mRawOutput = responseData;
+                            }
+                        }
+
+                    }
+
+                        return mRawOutput;
+                    
+                }
+                catch (WebException webException)
+                {
+                    if (webException.Response is HttpWebResponse &&
+                        (int)((HttpWebResponse)webException.Response).StatusCode == 429 && // Only retry on 429 error
+                        retryCount < 3)
+                    {
+                        retryCount++;
+                        Console.WriteLine("429 Error - Trying again in 250ms - Count=" + retryCount);
+                        Thread.Sleep(250);
+                    }
+                    else
+                        errToRethrow = webException;
+                }
+            } //while errToRethrow is null
+
+            //This needs to be outside while look or compiler will complain
+            throw errToRethrow;
+        }
+        /*
         public async Task<string> ApiRequestAsync(string uri)
         {
             var authInfo = await mAuthManager.GetAuthInfoAsync();
@@ -186,6 +273,7 @@ namespace SSA_mHelpDesk.API
 
             while (errToRethrow == null) // Retry
             {
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUri);
 
                 if (UserSettings.Production && UserSettings.Bearer_Workaround)
@@ -196,11 +284,12 @@ namespace SSA_mHelpDesk.API
 
                 try
                 {
-                    using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
+                    using (HttpWebResponse response = (HttpWebResponse) request.GetResponse())
                     using (Stream stream = response.GetResponseStream())
                     using (StreamReader reader = new StreamReader(stream))
                     {
-                        var tmp = await reader.ReadToEndAsync();
+                        var tmp = reader.ReadToEnd();
+//                        var tmp = await reader.ReadToEndAsync();
 
                         lock (this)
                         {
@@ -227,6 +316,7 @@ namespace SSA_mHelpDesk.API
 
             //This needs to be outside while look or compiler will complain
             throw errToRethrow;
-        }
+        }*/
+
     }
 }

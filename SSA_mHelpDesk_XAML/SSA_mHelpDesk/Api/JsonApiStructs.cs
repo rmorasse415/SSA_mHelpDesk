@@ -62,6 +62,7 @@ namespace SSA_mHelpDesk.API
         // createdInvoice
         public int serviceLocationId;
         public ServiceLocation serviceLocation;
+        public History history;
         public float subTotal;
         public float totalAmount;
         public float totalTax;
@@ -73,6 +74,8 @@ namespace SSA_mHelpDesk.API
         public string ticketStatus;
         public List<Appointment> appointments;
         public string typeName;
+        public string closedBy;
+        public bool closeError;
 
         private DateTime? _cachedNextApptDate = null;
         public DateTime? GetNextAppointmentDate()
@@ -109,6 +112,13 @@ namespace SSA_mHelpDesk.API
             else // This should never happen because we made sure count > 0
                 return null;
         }
+    }
+
+    public class History
+    {
+        public string userId;
+        public string notes;
+        public string statusId;
     }
 
     public class Appointment

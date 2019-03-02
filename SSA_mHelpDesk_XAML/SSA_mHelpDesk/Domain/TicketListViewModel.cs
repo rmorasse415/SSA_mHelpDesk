@@ -110,24 +110,26 @@ namespace SSA_mHelpDesk.Domain
   
             foreach (Ticket t in ticketList)
             {
-                DateTime? nad = t.GetNextAppointmentDate();
-                DateTime today = DateTime.Today;
-
-                if (nad.HasValue)
+                if (t.ticketStatus.StartsWith("Closed"))
                 {
-                    if ((nad.Value.Date > today) && (t.ticketStatus == "New"))
+                   
+                    ObservableTicket obsTick = new ObservableTicket(t);
+                    BeginFetchTicketHistory(obsTick);
+                    if (t.closedBy != null)
                     {
-                        // Need to change status to New: Scheduled
+                        if (!(t.closedBy.StartsWith("wtracey@") || t.closedBy.StartsWith("wron@")))
+                        {
+                      //      t.ticketStatus = "** Error **";
+                       //     t.closeError = true;
+                        }
                     }
+
+
                 }
                 else
                 {
-                    if (t.typeName == "Fire Inspection")
-                    {
-                        //Need to assign
-                    }
+                    t.closeError = false;
                 }
-
 
             }
 
@@ -139,9 +141,10 @@ namespace SSA_mHelpDesk.Domain
 
             DateTime? nad = ticket.GetNextAppointmentDate();
 
-            if ((ticket.ticketStatus.StartsWith("Closed")) ||
-                (ticket.ticketStatus == "Template") ||
-                (ticket.ticketStatus == "Withdrawn"))
+            if (((ticket.ticketStatus.StartsWith("Closed:")) ||
+                (ticket.ticketStatus == "New: Template") ||
+                (ticket.ticketStatus == "Withdrawn")) 
+                    && (!ticket.closeError))
 
                 return null;
 
@@ -153,6 +156,9 @@ namespace SSA_mHelpDesk.Domain
              * Job Complete, Rescheduled, Return Needed:If there is NO NAD or NAD in Past they go to ToBeScheduled, IF NAD is Today they go to Today List
              * else no List
              */
+
+            if (ticket.ticketStatus == "Closed" || ticket.closeError) // We do not use this status so if a ticket is closed it must be red listed
+                return ToScheduleDataItems;
 
             if (!nad.HasValue)
             {
@@ -185,8 +191,8 @@ namespace SSA_mHelpDesk.Domain
 
         public async Task<int> RefreshTicketsAsync()
         {
-            var ticketList = await sApiManager.GetTicketsAsync( //createStart: Convert.ToDateTime("1/1/2020")
-                                               appointmentStart: Convert.ToDateTime("2/20/2018"), appointmentEnd: Convert.ToDateTime("01/01/2020")
+            var ticketList = await sApiManager.GetTicketsAsync( createStart: Convert.ToDateTime("1/1/2019")
+                             //                  appointmentStart: Convert.ToDateTime("2/20/2019"), appointmentEnd: Convert.ToDateTime("01/01/2020")
                                                );
             if (ticketList != null)
             {
@@ -201,6 +207,25 @@ namespace SSA_mHelpDesk.Domain
             }
         }
 
+        public void BeginFetchTicketHistory(ObservableTicket ticket)
+        {
+            
+            var awaiter = sApiManager.GetHistoryAsync(Int32.Parse(ticket.Inner.ticketId)).GetAwaiter();
+            
+            awaiter.OnCompleted(() =>
+            {
+
+                var historylist = awaiter.GetResult();
+                if (historylist != null)
+                {
+                    if (historylist[0].notes != null && historylist[0].notes.StartsWith("Closed"))
+                    {
+                        ticket.ClosedBy = historylist[0].userId.ToLower();
+                    }
+                
+                }
+            });
+        }
         public void BeginFetchTicketCustomer(ObservableTicket ticket)
         {
             var awaiter = sApiManager.GetCustomerAsync(ticket.Inner.customerId).GetAwaiter();
@@ -256,6 +281,14 @@ namespace SSA_mHelpDesk.Domain
                 }
             }
         }
+        public string ClosedBy
+        {
+            get => _ticket.closedBy;
+            set
+            {
+                _ticket.closedBy = value;
+            }
+        }
 
         public ServiceLocation ServiceLocation
         {
@@ -266,6 +299,18 @@ namespace SSA_mHelpDesk.Domain
                 OnPropertyChanged("ServiceLocation");
                 OnPropertyChanged("CustomerName");
                 OnPropertyChanged("ServiceAddress");
+            }
+        }
+
+        public History history
+        {
+            get => _ticket.history;
+            set
+            {
+                _ticket.history = value;
+               // OnPropertyChanged("ServiceLocation");
+               // OnPropertyChanged("CustomerName");
+               // OnPropertyChanged("ServiceAddress");
             }
         }
 
