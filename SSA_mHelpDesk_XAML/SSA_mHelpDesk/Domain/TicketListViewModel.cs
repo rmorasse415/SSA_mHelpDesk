@@ -62,14 +62,15 @@ namespace SSA_mHelpDesk.Domain
 
             foreach (Ticket t in ticketList)
             {
-                BeginFetchTicketHistory(t);
+                ObservableTicket curTicket = new ObservableTicket(t);
+                BeginFetchTicketHistory(curTicket);
                 if (t.closedBy != null)
-                {
-                    if (!(t.closedBy.StartsWith("wtracey@") || t.closedBy.StartsWith("wron@")))
-                    {
-                        t.ticketStatus = "** Error **";
-                        t.closeError = true;
-                    }
+               {
+        //            if (!(t.closedBy.StartsWith("wtracey@") || t.closedBy.StartsWith("wron@")))
+          //          {
+            //            t.ticketStatus = "** Error **";
+              //          t.closeError = true;
+                //    }
                 }
 
                 var list = DetermineTicketList(t);
@@ -83,7 +84,7 @@ namespace SSA_mHelpDesk.Domain
                         if (ReferenceEquals(testList, list))
                         {
                             prevTicket.ResetTicket(t); // update the ticket TODO check property change
-                            //BeginFetchTicketServiceLocation(prevTicket);
+                             //BeginFetchTicketServiceLocation(prevTicket);
                             list = null; //don't add to list below
                         }
                         else // this ticket no longer belongs in this list
@@ -192,10 +193,10 @@ namespace SSA_mHelpDesk.Domain
             }
         }
 
-        public void BeginFetchTicketHistory(Ticket ticket)
+        public void BeginFetchTicketHistory(ObservableTicket ticket)
         {
             
-            var awaiter = sApiManager.GetHistoryAsync(Int32.Parse(ticket.ticketId)).GetAwaiter();
+            var awaiter = sApiManager.GetHistoryAsync(Int32.Parse(ticket.Inner.ticketId)).GetAwaiter();
             
             awaiter.OnCompleted(() =>
             {
@@ -203,9 +204,9 @@ namespace SSA_mHelpDesk.Domain
                 var historylist = awaiter.GetResult();
                 if (historylist != null)
                 {
-                    if (historylist[0].notes != null && historylist[0].notes.StartsWith("Closed"))
+                    if (historylist[0].notes != null)
                     {
-                        ticket.closedBy = historylist[0].userId.ToLower();
+                        ticket.ClosedBy = historylist[0].userId.ToLower();
                     }
                 
                 }
