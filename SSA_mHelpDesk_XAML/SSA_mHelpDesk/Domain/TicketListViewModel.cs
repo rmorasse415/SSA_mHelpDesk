@@ -62,16 +62,7 @@ namespace SSA_mHelpDesk.Domain
 
             foreach (Ticket t in ticketList)
             {
-                ObservableTicket curTicket = new ObservableTicket(t);
-                BeginFetchTicketHistory(curTicket);
-                if (t.closedBy != null)
-               {
-        //            if (!(t.closedBy.StartsWith("wtracey@") || t.closedBy.StartsWith("wron@")))
-          //          {
-            //            t.ticketStatus = "** Error **";
-              //          t.closeError = true;
-                //    }
-                }
+                //ObservableTicket curTicket = new ObservableTicket(t);
 
                 var list = DetermineTicketList(t);
 
@@ -116,9 +107,28 @@ namespace SSA_mHelpDesk.Domain
                         break; // go to next ticket
         }
         
-        private void RepairUpdatedTicketList(List<Ticket> ticketList)
+        private async Task RepairUpdatedTicketListAsync(List<Ticket> ticketList)
         {
- 
+            foreach (Ticket ticket in ticketList)
+            {
+                if (ticket.ticketStatus.StartsWith("Closed"))
+                {
+                    var historylist = await sApiManager.GetHistoryAsync(Int32.Parse(ticket.ticketId));
+
+                    if (historylist != null)
+                    {
+                        if (historylist[0].notes != null)
+                        {
+                            ticket.closedBy = historylist[0].userId.ToLower();
+                            if (!(ticket.closedBy.StartsWith("wtracey@") || ticket.closedBy.StartsWith("wron@")))
+                            {
+                                ticket.ticketStatus = "** Error **";
+                                ticket.closeError = true;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private ObservableCollection<ObservableTicket> DetermineTicketList(Ticket ticket)
@@ -183,7 +193,7 @@ namespace SSA_mHelpDesk.Domain
             if (ticketList != null)
             {
                 //Clipboard.SetText(sApiManager.GetLastRawOutput());
-                RepairUpdatedTicketList(ticketList);
+                await RepairUpdatedTicketListAsync(ticketList);
                 ProcessUpdatedTicketList(ticketList);
                 return ticketList.Count;
             }
