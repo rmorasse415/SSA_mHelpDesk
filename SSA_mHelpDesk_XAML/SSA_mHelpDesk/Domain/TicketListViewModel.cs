@@ -62,6 +62,16 @@ namespace SSA_mHelpDesk.Domain
 
             foreach (Ticket t in ticketList)
             {
+                BeginFetchTicketHistory(t);
+                if (t.closedBy != null)
+                {
+                    if (!(t.closedBy.StartsWith("wtracey@") || t.closedBy.StartsWith("wron@")))
+                    {
+                        t.ticketStatus = "** Error **";
+                        t.closeError = true;
+                    }
+                }
+
                 var list = DetermineTicketList(t);
 
                 ObservableTicket prevTicket = null;
@@ -107,32 +117,7 @@ namespace SSA_mHelpDesk.Domain
         
         private void RepairUpdatedTicketList(List<Ticket> ticketList)
         {
-  
-            foreach (Ticket t in ticketList)
-            {
-                if (t.ticketStatus.StartsWith("Closed"))
-                {
-                   
-                    ObservableTicket obsTick = new ObservableTicket(t);
-                    BeginFetchTicketHistory(obsTick);
-                    if (t.closedBy != null)
-                    {
-                        if (!(t.closedBy.StartsWith("wtracey@") || t.closedBy.StartsWith("wron@")))
-                        {
-                      //      t.ticketStatus = "** Error **";
-                       //     t.closeError = true;
-                        }
-                    }
-
-
-                }
-                else
-                {
-                    t.closeError = false;
-                }
-
-            }
-
+ 
         }
 
         private ObservableCollection<ObservableTicket> DetermineTicketList(Ticket ticket)
@@ -207,10 +192,10 @@ namespace SSA_mHelpDesk.Domain
             }
         }
 
-        public void BeginFetchTicketHistory(ObservableTicket ticket)
+        public void BeginFetchTicketHistory(Ticket ticket)
         {
             
-            var awaiter = sApiManager.GetHistoryAsync(Int32.Parse(ticket.Inner.ticketId)).GetAwaiter();
+            var awaiter = sApiManager.GetHistoryAsync(Int32.Parse(ticket.ticketId)).GetAwaiter();
             
             awaiter.OnCompleted(() =>
             {
@@ -220,7 +205,7 @@ namespace SSA_mHelpDesk.Domain
                 {
                     if (historylist[0].notes != null && historylist[0].notes.StartsWith("Closed"))
                     {
-                        ticket.ClosedBy = historylist[0].userId.ToLower();
+                        ticket.closedBy = historylist[0].userId.ToLower();
                     }
                 
                 }
