@@ -53,7 +53,10 @@ namespace SSA_mHelpDesk.Utils
 
         public void MarkAsChecked(string ticketId, bool closedError)
         {
-            closedErrorCache.Add(ticketId, closedError);
+            if (closedErrorCache.ContainsKey(ticketId))
+                closedErrorCache[ticketId] = closedError;
+            else
+                closedErrorCache.Add(ticketId, closedError);
         }
 
         public bool IsErrorCheckNeeded(string ticketId)
