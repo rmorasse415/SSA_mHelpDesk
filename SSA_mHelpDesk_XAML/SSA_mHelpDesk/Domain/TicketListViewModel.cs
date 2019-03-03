@@ -1,4 +1,5 @@
 ﻿using SSA_mHelpDesk.API;
+using SSA_mHelpDesk.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -109,10 +110,16 @@ namespace SSA_mHelpDesk.Domain
         
         private async Task RepairUpdatedTicketListAsync(List<Ticket> ticketList)
         {
+            var errorCache = TicketClosedErrorCache.GetInstance();
+
             foreach (Ticket ticket in ticketList)
             {
                 if (ticket.ticketStatus.StartsWith("Closed"))
                 {
+                    //if we don't need to check the ticket then skip
+                    if (!errorCache.IsErrorCheckNeeded(ticket.ticketId))
+                        continue;
+
                     var historylist = await sApiManager.GetHistoryAsync(Int32.Parse(ticket.ticketId));
 
                     if (historylist != null)
@@ -125,10 +132,13 @@ namespace SSA_mHelpDesk.Domain
                                 ticket.ticketStatus = "** Error **";
                                 ticket.closeError = true;
                             }
+                            errorCache.MarkAsChecked(ticket.ticketId, ticket.closeError);
                         }
                     }
                 }
             }
+
+            errorCache.Save();
         }
 
         private ObservableCollection<ObservableTicket> DetermineTicketList(Ticket ticket)

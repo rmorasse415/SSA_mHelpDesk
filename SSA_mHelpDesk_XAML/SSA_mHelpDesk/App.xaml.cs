@@ -19,6 +19,8 @@ namespace SSA_mHelpDesk
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
             base.OnStartup(e);
 
+            TicketClosedErrorCache.InitInstance(".closedErrorCache");
+
             if (UserSettings.ApiKey == null || UserSettings.ApiSecret == null)
             {
                 SettingsWindow settingsWindow = new SettingsWindow()

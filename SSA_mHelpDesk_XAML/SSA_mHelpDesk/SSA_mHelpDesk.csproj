@@ -201,6 +201,7 @@
       <DependentUpon>TicketListPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\ByteConverter.cs" />
+    <Compile Include="Utils\TicketClosedErrorCache.cs" />
     <Compile Include="Utils\EncryptedFileManager.cs" />
     <Compile Include="Utils\UserSettings.cs" />
     <Page Include="AuthVericationFailedPage.xaml">

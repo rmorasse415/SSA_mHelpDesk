@@ -27,19 +27,7 @@ namespace SSA_mHelpDesk.Utils
             fileData.AddRange(entropy.Take(bytesOfEntropy));
             fileData.AddRange(ciphertext);
 
-            //N.B. Can't use File.WriteAllBytes when file is hidden
-            using (FileStream fs = new FileStream(fileLocation, FileMode.OpenOrCreate))
-            {
-                using (BinaryWriter w = new BinaryWriter(fs, Encoding.UTF8, true))
-                {
-                    // Write your data here...
-                    w.Write(fileData.ToArray());
-                }
-                // Set the stream length to the current position in order to truncate leftover text
-                fs.SetLength(fs.Position);
-            }
-
-            //File.WriteAllBytes(fileLocation, fileData.ToArray());
+            ByteConverter.WriteAllBytesToHiddenFile(fileLocation, fileData.ToArray());
         }
 
         public static byte[] ReadData(string fileLocation)
