@@ -45,7 +45,7 @@
         <Style x:Key="FireCellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DGCellStyle}">
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="LightYellow"/>
+                    <Setter Property="Background" Value="#ffffA0"/>
                     <Setter Property="Foreground" Value="Black"/>
                 </Trigger>
             </Style.Triggers>
@@ -213,8 +213,15 @@
                 <materialDesign:Card Margin="16" Background="{DynamicResource MaterialDesignBackground}">
                     <Expander
                             HorizontalAlignment="Stretch"
-                            Header="Schedule Required"
                             Background="PaleVioletRed">
+                        <Expander.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" FontSize="15">To Schedule</TextBlock>
+                                <Border CornerRadius="10" Background="#BB4063" Padding="8,2,8,2" Margin="8,0,8,0">
+                                    <TextBlock Text="{Binding Path=ToScheduleDataItems.Count, StringFormat='\{0} Tickets'}"/>
+                                </Border>
+                            </StackPanel>
+                        </Expander.Header>
                         <!-- piece together your own items control to create some nice stuff that will make everyone think you are cool. and rightly so, because you are cool.  you might even be a hipster for all I know -->
                         <DataGrid GridLinesVisibility="None"
                                Grid.IsSharedSizeScope="True"  PreviewMouseDown="ItemsControl_MouseLeftButtonDown"
@@ -236,8 +243,15 @@
                 <materialDesign:Card Margin="16" Background="{DynamicResource MaterialDesignBackground}">
                     <Expander
                             HorizontalAlignment="Stretch"
-                            Header="Today"
                             Background="LightGreen">
+                        <Expander.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" FontSize="15">Today</TextBlock>
+                                <Border CornerRadius="10" Background="#60BE60" Padding="8,2,8,2" Margin="8,0,8,0">
+                                    <TextBlock Text="{Binding Path=TodayDataItems.Count, StringFormat='\{0} Tickets'}"/>
+                                </Border>
+                            </StackPanel>
+                        </Expander.Header>
                         <!-- piece together your own items control to create some nice stuff that will make everyone think you are cool. and rightly so, because you are cool.  you might even be a hipster for all I know -->
                         <DataGrid GridLinesVisibility="None"
                                Grid.IsSharedSizeScope="True"  PreviewMouseDown="ItemsControl_MouseLeftButtonDown"
@@ -258,8 +272,15 @@
                 <materialDesign:Card Margin="16" Background="{DynamicResource MaterialDesignBackground}">
                     <Expander
                             HorizontalAlignment="Stretch"
-                            Header="Fire Inspections"
-                            Background="LightYellow">
+                            Background="#ffffA0">
+                        <Expander.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" FontSize="15">Fire Inspections</TextBlock>
+                                <Border CornerRadius="10" Background="#CFCF50" Padding="8,2,8,2" Margin="8,0,8,0">
+                                    <TextBlock Text="{Binding Path=FireInspectionDataItems.Count, StringFormat='\{0} Tickets'}"/>
+                                </Border>
+                            </StackPanel>
+                        </Expander.Header>
                         <!-- piece together your own items control to create some nice stuff that will make everyone think you are cool. and rightly so, because you are cool.  you might even be a hipster for all I know -->
                         <!--<ItemsControl
                                   Grid.IsSharedSizeScope="True" MouseLeftButtonDown="ItemsControl_MouseLeftButtonDown"
@@ -268,7 +289,7 @@
                         <DataGrid GridLinesVisibility="None"
                                Grid.IsSharedSizeScope="True"  PreviewMouseDown="ItemsControl_MouseLeftButtonDown"
                                   Margin="12 0 12 0" CellStyle="{StaticResource FireCellStyle}"
-                                ItemsSource="{Binding FireInspectionDataItems}" Background="LightYellow" BorderThickness="0"  IsReadOnly="True" AutoGenerateColumns="False">
+                                ItemsSource="{Binding FireInspectionDataItems}" Background="#ffffA0" BorderThickness="0"  IsReadOnly="True" AutoGenerateColumns="False">
                             <DataGrid.Columns>
                                 <StaticResource ResourceKey="dgCol0"/>
                                 <StaticResource ResourceKey="dgCol1"/>
