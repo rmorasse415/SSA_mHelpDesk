@@ -55,28 +55,32 @@ namespace SSA_mHelpDesk.API
             }
         }
 
-        public async Task<List<Ticket>> GetTicketsAsync(int? statusId = null, 
+        public async Task<List<Ticket>> GetTicketsAsync(int? statusId = null,
             DateTime? appointmentStart = null,
             DateTime? appointmentEnd = null,
             DateTime? createStart = null,
             DateTime? createEnd = null,
-            string fields = "ticketId,statusId,subject,assignedTo,customerId,creationDate,typeId,ticketNumber,appointmentCount,appointments{id,startUTC,endUTC,teamName},customStatusId,typeName,ticketStatus,customer{name},serviceLocation{name,fulladdress}")
+            DateTime? lastModDate = null,
+            string fields = "ticketId,statusId,subject,customerId,assignedTo,lastModDate,creationDate,typeId,ticketNumber,appointmentCount,appointments{id,startUTC,endUTC,teamName},customStatusId,typeName,ticketStatus,customer{name},serviceLocation{name,fulladdress}")
         {
             var uriParams = new List<Tuple<string, string>>();
 
             const string dateFormat = "yyyy-MM-ddTHH:mm:ss+00:00";
-
+            
             if (appointmentStart.HasValue)
-                uriParams.Add(new Tuple<string, string>("appointmentStart", appointmentStart.Value.ToUniversalTime().ToString(dateFormat)));
+                uriParams.Add(new Tuple<string, string>("appointmentStart", WebUtility.UrlEncode(appointmentStart.Value.ToUniversalTime().ToString(dateFormat))));
 
             if (appointmentEnd.HasValue)
-                uriParams.Add(new Tuple<string, string>("appointmentEnd", appointmentEnd.Value.ToUniversalTime().ToString(dateFormat)));
+                uriParams.Add(new Tuple<string, string>("appointmentEnd", WebUtility.UrlEncode(appointmentEnd.Value.ToUniversalTime().ToString(dateFormat))));
 
             if (createStart.HasValue)
-                uriParams.Add(new Tuple<string, string>("createStart", createStart.Value.ToUniversalTime().ToString(dateFormat)));
+                uriParams.Add(new Tuple<string, string>("createStart", WebUtility.UrlEncode(createStart.Value.ToUniversalTime().ToString(dateFormat))));
 
             if (createEnd.HasValue)
-                uriParams.Add(new Tuple<string, string>("createEnd", createEnd.Value.ToUniversalTime().ToString(dateFormat)));
+                uriParams.Add(new Tuple<string, string>("createEnd", WebUtility.UrlEncode(createEnd.Value.ToUniversalTime().ToString(dateFormat))));
+
+            if (lastModDate.HasValue)
+                uriParams.Add(new Tuple<string, string>("lastModDate", WebUtility.UrlEncode(lastModDate.Value.ToUniversalTime().ToString(dateFormat))));
 
             if (statusId.HasValue)
                 uriParams.Add(new Tuple<string, string>("statusId", statusId.ToString()));

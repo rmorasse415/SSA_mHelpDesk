@@ -127,7 +127,8 @@ namespace SSA_mHelpDesk.Domain
                         if (historylist[0].notes != null)
                         {
                             ticket.closedBy = historylist[0].userId.ToLower();
-                            if (!(ticket.closedBy.StartsWith("wtracey@") || ticket.closedBy.StartsWith("wron@")))
+                            // need to loop thru list to find who closed ticket
+                            if (!(ticket.closedBy.StartsWith("tracey@") || ticket.closedBy.StartsWith("ron@")))
                             {
                                 ticket.ticketStatus = "** Error **";
                                 ticket.closeError = true;
@@ -143,9 +144,6 @@ namespace SSA_mHelpDesk.Domain
 
         private ObservableCollection<ObservableTicket> DetermineTicketList(Ticket ticket)
         {
-            DateTime today = DateTime.Today;
-
-            DateTime? nad = ticket.GetNextAppointmentDate();
 
             if (((ticket.ticketStatus.StartsWith("Closed:")) ||
                 (ticket.ticketStatus == "New: Template") ||
@@ -153,6 +151,10 @@ namespace SSA_mHelpDesk.Domain
                     && (!ticket.closeError))
 
                 return null;
+
+            DateTime today = DateTime.Today;
+
+            DateTime? nad = ticket.GetNextAppointmentDate();
 
             /*
              * Fire Inspections: with a NAD in the past and status of != New: Scheduled
@@ -197,9 +199,8 @@ namespace SSA_mHelpDesk.Domain
 
         public async Task<int> RefreshTicketsAsync()
         {
-            var ticketList = await sApiManager.GetTicketsAsync( createStart: Convert.ToDateTime("1/1/2019")
-                             //                  appointmentStart: Convert.ToDateTime("2/20/2019"), appointmentEnd: Convert.ToDateTime("01/01/2020")
-                                               );
+            var ticketList = await sApiManager.GetTicketsAsync(createStart: Convert.ToDateTime("1/1/2018"));  //Need to come from config              
+
             if (ticketList != null)
             {
                 //Clipboard.SetText(sApiManager.GetLastRawOutput());
