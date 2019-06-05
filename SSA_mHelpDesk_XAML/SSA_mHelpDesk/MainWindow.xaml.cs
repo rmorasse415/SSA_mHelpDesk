@@ -23,6 +23,7 @@ namespace SSA_mHelpDesk
         private LoadingPage mLoadingPage = null;
 
         private ContentAnimationManager mPageAnimationManager;
+        public string TitleLastUpdate = "1/1/1/";
 
         private enum State
         {
@@ -62,15 +63,15 @@ namespace SSA_mHelpDesk
 
         private void RefreshTimer_Tick(object sender, EventArgs e)
         {
-            VerifyAuthAndLoad();
+            VerifyAuthAndLoad(false);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            VerifyAuthAndLoad();
+            VerifyAuthAndLoad(true);
         }
 
-        private void VerifyAuthAndLoad()
+        private void VerifyAuthAndLoad(bool startup)
         {
             PageState = State.VerifyingAuth;
             var getAuthInfoAwaiter = sAuthManager.GetAuthInfoAsync().GetAwaiter();
@@ -80,7 +81,7 @@ namespace SSA_mHelpDesk
                 if (sAuthManager.IsAuthValid(authInfo))
                 {
                     PageState = State.LoadingTicketList;
-                    mTicketListViewModel.RefreshTicketsAsync().GetAwaiter().OnCompleted(() => PageState = State.LoadingComplete);
+                    mTicketListViewModel.RefreshTicketsAsync(startup).GetAwaiter().OnCompleted(() => PageState = State.LoadingComplete);
                 }
                 else // invalid auth
                 {
@@ -101,7 +102,7 @@ namespace SSA_mHelpDesk
 
             if (result == true)
             {
-                VerifyAuthAndLoad();
+                VerifyAuthAndLoad(true);
             }
         }
 

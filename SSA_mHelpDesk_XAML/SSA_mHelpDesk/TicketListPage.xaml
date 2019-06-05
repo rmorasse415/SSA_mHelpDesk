@@ -34,14 +34,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="GreenCellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DGCellStyle}">
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="LightGreen"/>
-                    <Setter Property="Foreground" Value="Black"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
         <Style x:Key="FireCellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DGCellStyle}">
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
@@ -50,7 +42,15 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
+        <Style x:Key="GreenCellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource DGCellStyle}">
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="LightGreen"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+ 
         <DataGridTextColumn Width="20*" x:Key="dgCol0" x:Shared="False" Header="Customer Name"  Binding="{Binding CustomerName}">
             <DataGridTextColumn.ElementStyle>
                 <Style TargetType="TextBlock">
@@ -239,43 +239,13 @@
                         </DataGrid>
                     </Expander>
                 </materialDesign:Card>
-                <!--</materialDesign:Badged>-->
-                <materialDesign:Card Margin="16" Background="{DynamicResource MaterialDesignBackground}">
-                    <Expander
-                            HorizontalAlignment="Stretch"
-                            Background="LightGreen">
-                        <Expander.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock VerticalAlignment="Center" FontSize="15">Today</TextBlock>
-                                <Border CornerRadius="10" Background="#60BE60" Padding="8,2,8,2" Margin="8,0,8,0">
-                                    <TextBlock Text="{Binding Path=TodayDataItems.Count, StringFormat='\{0} Tickets'}"/>
-                                </Border>
-                            </StackPanel>
-                        </Expander.Header>
-                        <!-- piece together your own items control to create some nice stuff that will make everyone think you are cool. and rightly so, because you are cool.  you might even be a hipster for all I know -->
-                        <DataGrid GridLinesVisibility="None"
-                               Grid.IsSharedSizeScope="True"  PreviewMouseDown="ItemsControl_MouseLeftButtonDown"
-                                  Margin="12 0 12 0" CellStyle="{StaticResource GreenCellStyle}"
-                                ItemsSource="{Binding TodayDataItems}" Background="LightGreen" BorderThickness="0"  IsReadOnly="True" AutoGenerateColumns="False">
-                            <DataGrid.Columns>
-                                <StaticResource ResourceKey="dgCol0"/>
-                                <StaticResource ResourceKey="dgCol1"/>
-                                <StaticResource ResourceKey="dgCol2"/>
-                                <StaticResource ResourceKey="dgCol3"/>
-                                <StaticResource ResourceKey="dgCol4"/>
-                                <StaticResource ResourceKey="dgCol5"/>
-                                <StaticResource ResourceKey="dgCol6"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </Expander>
-                </materialDesign:Card>
                 <materialDesign:Card Margin="16" Background="{DynamicResource MaterialDesignBackground}">
                     <Expander
                             HorizontalAlignment="Stretch"
                             Background="#ffffA0">
                         <Expander.Header>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock VerticalAlignment="Center" FontSize="15">Fire Inspections</TextBlock>
+                                <TextBlock VerticalAlignment="Center" FontSize="15">Upcoming</TextBlock>
                                 <Border CornerRadius="10" Background="#CFCF50" Padding="8,2,8,2" Margin="8,0,8,0">
                                     <TextBlock Text="{Binding Path=FireInspectionDataItems.Count, StringFormat='\{0} Tickets'}"/>
                                 </Border>
@@ -290,6 +260,36 @@
                                Grid.IsSharedSizeScope="True"  PreviewMouseDown="ItemsControl_MouseLeftButtonDown"
                                   Margin="12 0 12 0" CellStyle="{StaticResource FireCellStyle}"
                                 ItemsSource="{Binding FireInspectionDataItems}" Background="#ffffA0" BorderThickness="0"  IsReadOnly="True" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <StaticResource ResourceKey="dgCol0"/>
+                                <StaticResource ResourceKey="dgCol1"/>
+                                <StaticResource ResourceKey="dgCol2"/>
+                                <StaticResource ResourceKey="dgCol3"/>
+                                <StaticResource ResourceKey="dgCol4"/>
+                                <StaticResource ResourceKey="dgCol5"/>
+                                <StaticResource ResourceKey="dgCol6"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Expander>
+                </materialDesign:Card>
+                <!--</materialDesign:Badged>-->
+                <materialDesign:Card Margin="16" Background="{DynamicResource MaterialDesignBackground}">
+                    <Expander
+                            HorizontalAlignment="Stretch"
+                            Background="LightGreen">
+                        <Expander.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" FontSize="15">Ready To Bill</TextBlock>
+                                <Border CornerRadius="10" Background="#60BE60" Padding="8,2,8,2" Margin="8,0,8,0">
+                                    <TextBlock Text="{Binding Path=TodayDataItems.Count, StringFormat='\{0} Tickets'}"/>
+                                </Border>
+                            </StackPanel>
+                        </Expander.Header>
+                        <!-- piece together your own items control to create some nice stuff that will make everyone think you are cool. and rightly so, because you are cool.  you might even be a hipster for all I know -->
+                        <DataGrid GridLinesVisibility="None"
+                               Grid.IsSharedSizeScope="True"  PreviewMouseDown="ItemsControl_MouseLeftButtonDown"
+                                  Margin="12 0 12 0" CellStyle="{StaticResource GreenCellStyle}"
+                                ItemsSource="{Binding TodayDataItems}" Background="LightGreen" BorderThickness="0"  IsReadOnly="True" AutoGenerateColumns="False">
                             <DataGrid.Columns>
                                 <StaticResource ResourceKey="dgCol0"/>
                                 <StaticResource ResourceKey="dgCol1"/>

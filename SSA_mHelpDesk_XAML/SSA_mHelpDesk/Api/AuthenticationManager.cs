@@ -15,7 +15,8 @@ namespace SSA_mHelpDesk.API
 {
     public sealed class AuthenticationManager
     {
-        private static readonly string authFileLocation = ".auth.dat";
+    
+        private static readonly string authFileLocation = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\SSA_mHelpDesk\\auth.dat";
 
         private static readonly Lazy<AuthenticationManager> lazy =
             new Lazy<AuthenticationManager>(() => new AuthenticationManager());

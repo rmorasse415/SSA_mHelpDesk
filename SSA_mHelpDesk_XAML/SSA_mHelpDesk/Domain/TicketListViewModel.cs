@@ -24,7 +24,6 @@ namespace SSA_mHelpDesk.Domain
         public ObservableCollection<ObservableTicket> TodayDataItems => _todayDataItems;
         public ObservableCollection<ObservableTicket> FireInspectionDataItems => _fireInspectionDataItems;
 
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = null)
@@ -102,10 +101,10 @@ namespace SSA_mHelpDesk.Domain
             }
 
             //remove anything left in itemsInLists from all the lists
-            foreach (ObservableTicket obsTicket in itemsInLists)
-                foreach (var testList in displayLists)
-                    if (testList.Remove(obsTicket))
-                        break; // go to next ticket
+           // foreach (ObservableTicket obsTicket in itemsInLists)
+            //    foreach (var testList in displayLists)
+            //        if (testList.Remove(obsTicket))
+             //           break; // go to next ticket
         }
         
         private async Task RepairUpdatedTicketListAsync(List<Ticket> ticketList)
@@ -145,6 +144,29 @@ namespace SSA_mHelpDesk.Domain
         private ObservableCollection<ObservableTicket> DetermineTicketList(Ticket ticket)
         {
 
+            /*
+              * To Be Scheduled List:
+              * New - Regardless of NAD
+              * New: Scheduled,
+              * Open: En route,
+              * Open: In-Progress,
+              * Open: Rescheduled,
+              * Open: Return Needed  -> with no NAD or NAD in past  
+              * 
+              * Upcoming List:
+              * Fire Inspections
+              * Open: On Hold
+              * 
+              * 
+              * Ready to Bill List
+              * Open: Job Complete
+              * 
+              */
+
+            /* 
+             * These go on no list
+             */
+
             if (((ticket.ticketStatus.StartsWith("Closed:")) ||
                 (ticket.ticketStatus == "New: Template") ||
                 (ticket.ticketStatus == "Withdrawn")) 
@@ -153,53 +175,40 @@ namespace SSA_mHelpDesk.Domain
                 return null;
 
             DateTime today = DateTime.Today;
-
             DateTime? nad = ticket.GetNextAppointmentDate();
-
-            /*
-             * Fire Inspections: with a NAD in the past and status of != New: Scheduled
-             * go on the Red List other wise they go on the Fire Inspection List
-             * 
-             * All Other Tickets with a New, Scheduled, Confirm Schedule, Waiting for parts, Open Confirm Schedule, En:route, In-Progress, 
-             * Job Complete, Rescheduled, Return Needed:If there is NO NAD or NAD in Past they go to ToBeScheduled, IF NAD is Today they go to Today List
-             * else no List
-             */
+ 
 
             if (ticket.ticketStatus == "Closed" || ticket.closeError) // We do not use this status so if a ticket is closed it must be red listed
                 return ToScheduleDataItems;
 
-            if (!nad.HasValue)
+            if (ticket.ticketStatus.Contains("Job Complete"))
             {
-                if (ticket.ticketStatus != "Fire Inspection")
-                   return ToScheduleDataItems;
+                return TodayDataItems;
             }
-            else
+
+
+            if (((ticket.typeName == "Fire Inspection") && (nad.HasValue) && (nad.Value.Date > today)) || (ticket.ticketStatus == "Open: On Hold"))
             {
-                if (nad.Value.Date == today)
-                    return TodayDataItems;
-
-                //                else if (nad.Value.Date > today-7 &&
-                //                       ticket.ticketStatus == "Open: Job Complete")
-                //                    return ToScheduleDataItems;
-
-
-                else if (((nad.Value.Date < today) &&
-                          (!ticket.ticketStatus.Contains("Job Complete"))) ||
-                        (nad.Value.Date.AddDays(5) < today)) 
-                {
-                        return ToScheduleDataItems;
-                }
-                else if (ticket.typeName == "Fire Inspection")
-                    return FireInspectionDataItems;
-                //return null;
-
+                return FireInspectionDataItems;
             }
+            else if ((!nad.HasValue) || (nad.Value.Date < today))
+            {
+                return ToScheduleDataItems;
+            }
+          
             return null;
         }
 
-        public async Task<int> RefreshTicketsAsync()
+        public async Task<int> RefreshTicketsAsync(bool startup)
         {
-            var ticketList = await sApiManager.GetTicketsAsync(createStart: Convert.ToDateTime("1/1/2018"));  //Need to come from config              
+            string modDate;
+            if (startup)
+                modDate = "9/1/2018";
+            else
+                modDate = DateTime.Today.ToShortDateString();
+
+            var ticketList = await sApiManager.GetTicketsAsync(createStart: Convert.ToDateTime("1/1/2018"), lastModDate: Convert.ToDateTime(modDate), pageSize:500);  //Need to come from config              
+//            var ticketList = await sApiManager.GetTicketsAsync(createStart: Convert.ToDateTime("1/1/2018"));  //Need to come from config              
 
             if (ticketList != null)
             {

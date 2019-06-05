@@ -183,12 +183,12 @@
                     <StackPanel Orientation="Horizontal">
                         <CheckBox x:Name="AutoRefreshCheckbox" Margin="0,0,24,0" IsChecked="True" Content="Auto Refresh" VerticalAlignment="Center" Unchecked="AutoRefreshCheckbox_Unchecked" Checked="AutoRefreshCheckbox_Checked"/>
                         <Label Content="Refresh period (seconds):" IsEnabled="{Binding IsChecked, ElementName=AutoRefreshCheckbox}"/>
-                        <TextBox x:Name="RefreshSeconds" materialDesign:ValidationAssist.Suppress="True" MaxLength="4" IsEnabled="{Binding IsChecked, ElementName=AutoRefreshCheckbox}" MinWidth="60">
+                        <TextBox x:Name="RefreshSeconds"  materialDesign:ValidationAssist.Suppress="True" MaxLength="4" IsEnabled="{Binding IsChecked, ElementName=AutoRefreshCheckbox}" MinWidth="60" TextChanged="RefreshSeconds_TextChanged">
                             <TextBox.Text>
                                 <Binding RelativeSource="{RelativeSource Self}" Path="Text"
                                     UpdateSourceTrigger="Explicit" ValidatesOnDataErrors="True">
                                     <Binding.ValidationRules>
-                                        <domain:NumericValidationRule Min="10" ValidatesOnTargetUpdated="True"/>
+                                        <domain:NumericValidationRule Min="60" ValidatesOnTargetUpdated="True"/>
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox.Text>

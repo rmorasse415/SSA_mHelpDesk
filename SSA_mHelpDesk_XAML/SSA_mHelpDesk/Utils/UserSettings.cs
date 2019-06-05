@@ -6,12 +6,14 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SSA_mHelpDesk.Utils
 {
     static class UserSettings
     {
-        private static readonly string accountInfoFile = ".accountInfo.dat";
+        private static string dataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\SSA_mHelpDesk";
+        private static readonly string accountInfoFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\SSA_mHelpDesk\\.accountInfo.dat";
         private static AccountInfo _accountInfo;
 
         struct AccountInfo
@@ -25,11 +27,20 @@ namespace SSA_mHelpDesk.Utils
         {
             try
             {
+                if (!Directory.Exists(dataPath))
+                {
+                    // Try to create the directory.
+                    DirectoryInfo di = Directory.CreateDirectory(dataPath);
+
+                }
+
+
                 // load the account info from a file
                 _accountInfo = EncryptedFileManager.ReadObject<AccountInfo>(accountInfoFile);
             }
             catch (Exception)
             {
+                MessageBox.Show("Setting file does not exist." + dataPath, "SSA_mHelpDesk");
                 // do nothing
             }
         }

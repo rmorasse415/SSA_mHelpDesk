@@ -247,5 +247,10 @@ namespace SSA_mHelpDesk
             if (RefreshSeconds != null)
                 RefreshSeconds.GetBindingExpression(TextBox.TextProperty).UpdateSource();
         }
+
+        private void RefreshSeconds_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

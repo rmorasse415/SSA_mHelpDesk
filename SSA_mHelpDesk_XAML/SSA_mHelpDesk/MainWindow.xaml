@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SSA_mHelpDesk"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="MainWindow" Height="637.425" Width="1027"
         Loaded="Window_Loaded"
@@ -31,7 +32,7 @@
                                         Height="24"
                                         Width="24" />
                     </Button>
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22">South Shore Alarms mHelpDesk Tool</TextBlock>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" Text="{Binding Source={x:Static system:DateTime.Now}, StringFormat=South Shore Alarms MHelpDesk Tool {0:hh:mm}}"/>
                 </DockPanel>
             </materialDesign:ColorZone>
             <ContentControl x:Name="pageFrame"/>

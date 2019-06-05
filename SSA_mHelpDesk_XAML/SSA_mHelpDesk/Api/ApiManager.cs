@@ -56,6 +56,7 @@ namespace SSA_mHelpDesk.API
         }
 
         public async Task<List<Ticket>> GetTicketsAsync(int? statusId = null,
+            int? pageSize = 1,
             DateTime? appointmentStart = null,
             DateTime? appointmentEnd = null,
             DateTime? createStart = null,
@@ -66,7 +67,8 @@ namespace SSA_mHelpDesk.API
             var uriParams = new List<Tuple<string, string>>();
 
             const string dateFormat = "yyyy-MM-ddTHH:mm:ss+00:00";
-            
+
+
             if (appointmentStart.HasValue)
                 uriParams.Add(new Tuple<string, string>("appointmentStart", WebUtility.UrlEncode(appointmentStart.Value.ToUniversalTime().ToString(dateFormat))));
 
@@ -88,12 +90,16 @@ namespace SSA_mHelpDesk.API
             if (fields != null)
                 uriParams.Add(new Tuple<string, string>("fields", fields));
 
+            if (pageSize.HasValue)
+                uriParams.Add(new Tuple<string, string>("pageSize", pageSize.ToString()));
+
             return await GetTicketsAsync(uriParams);
         }
 
         private async Task<List<Ticket>> GetTicketsAsync(List<Tuple<string, string>> uriParams)
         {
             string apiReqUri = "portal/" + UserSettings.PortalId + "/tickets";
+            int rowCount = 500;
            
             if (uriParams.Count > 0)
             {
@@ -114,6 +120,19 @@ namespace SSA_mHelpDesk.API
             try
             {
                 ResultList<Ticket> ticketList = JsonConvert.DeserializeObject<ResultList<Ticket>>(resultStr);
+                while (ticketList.totalRows > rowCount)
+                {
+                    string napiReqUri = apiReqUri += "&";
+                    napiReqUri += "rowIndex" + "=" + rowCount.ToString();
+                    string resultStr2 = await ApiRequestAsync(napiReqUri);
+                    ResultList<Ticket> ticketList2 = JsonConvert.DeserializeObject<ResultList<Ticket>>(resultStr2);
+                    ticketList2 = JsonConvert.DeserializeObject<ResultList<Ticket>>(resultStr2);
+                    ticketList.results.AddRange(ticketList2.results);
+                    rowCount += 500;
+                }
+                
+
+
                 var ret = ticketList.results;
                 SetLastError(prevError);
                 return ret;

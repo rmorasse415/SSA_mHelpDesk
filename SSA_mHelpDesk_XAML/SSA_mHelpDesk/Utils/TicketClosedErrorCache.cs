@@ -9,6 +9,8 @@ namespace SSA_mHelpDesk.Utils
 {
     class TicketClosedErrorCache
     {
+        private static string dataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\SSA_mHelpDesk\\";
+   
         private readonly String filename;
         private readonly Dictionary<String, Boolean> closedErrorCache = null;
 
@@ -22,12 +24,13 @@ namespace SSA_mHelpDesk.Utils
         // needs to be initialized once with parameters before use
         public static void InitInstance(string fileName)
         {
+            string fullFileName = dataPath + fileName;
             if (mSingleton != null)
             {
                 throw new NotSupportedException("You cannot initialize this class more than once");
             }
 
-            mSingleton = new TicketClosedErrorCache(fileName);
+            mSingleton = new TicketClosedErrorCache(fullFileName);
         }
 
         private TicketClosedErrorCache(string fileName)
