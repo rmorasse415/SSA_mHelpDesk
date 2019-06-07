@@ -187,6 +187,7 @@
       <DependentUpon>AuthVericationFailedPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Domain\LoadingPageViewModel.cs" />
+    <Compile Include="Domain\MainWindowViewModel.cs" />
     <Compile Include="Domain\NotEmptyValidationRule.cs" />
     <Compile Include="Domain\NumericValidationRule.cs" />
     <Compile Include="LoadingPage.xaml.cs">

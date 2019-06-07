@@ -54,6 +54,8 @@ namespace SSA_mHelpDesk
         {
             InitializeComponent();
 
+            DataContext = new MainWindowViewModel();
+
             PageState = State.VerifyingAuth;
 
             refreshTimer.Tick += RefreshTimer_Tick;
@@ -140,6 +142,8 @@ namespace SSA_mHelpDesk
 
                     nextPage = mTicketListPage;
                     mTicketListViewModel.ShowRefreshIndicator = false;
+
+                    ((MainWindowViewModel)DataContext).LastUpdated = DateTime.Now;
 
                     // This will also restart the timer if it was already running
                     if (UserSettings.AutoRefresh)

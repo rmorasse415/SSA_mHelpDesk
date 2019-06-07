@@ -32,7 +32,7 @@
                                         Height="24"
                                         Width="24" />
                     </Button>
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" Text="{Binding Source={x:Static system:DateTime.Now}, StringFormat=South Shore Alarms MHelpDesk Tool {0:hh:mm}}"/>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" Text="{Binding LastUpdated, StringFormat=South Shore Alarms MHelpDesk Tool {0:hh:mm}}"/>
                 </DockPanel>
             </materialDesign:ColorZone>
             <ContentControl x:Name="pageFrame"/>
