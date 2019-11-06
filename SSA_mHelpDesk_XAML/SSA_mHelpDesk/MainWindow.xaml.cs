@@ -21,10 +21,10 @@ namespace SSA_mHelpDesk
         private TicketListPage mTicketListPage = null;
         private AuthVericationFailedPage mAuthFailedPage = null;
         private LoadingPage mLoadingPage = null;
+        private bool Startup = true;
 
         private ContentAnimationManager mPageAnimationManager;
-        public string TitleLastUpdate = "1/1/1/";
-
+ 
         private enum State
         {
             Init,
@@ -65,15 +65,15 @@ namespace SSA_mHelpDesk
 
         private void RefreshTimer_Tick(object sender, EventArgs e)
         {
-            VerifyAuthAndLoad(false);
+            VerifyAuthAndLoad();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            VerifyAuthAndLoad(true);
+            VerifyAuthAndLoad();
         }
 
-        private void VerifyAuthAndLoad(bool startup)
+        private void VerifyAuthAndLoad()
         {
             PageState = State.VerifyingAuth;
             var getAuthInfoAwaiter = sAuthManager.GetAuthInfoAsync().GetAwaiter();
@@ -83,7 +83,7 @@ namespace SSA_mHelpDesk
                 if (sAuthManager.IsAuthValid(authInfo))
                 {
                     PageState = State.LoadingTicketList;
-                    mTicketListViewModel.RefreshTicketsAsync(startup).GetAwaiter().OnCompleted(() => PageState = State.LoadingComplete);
+                    mTicketListViewModel.RefreshTicketsAsync(Startup).GetAwaiter().OnCompleted(() => PageState = State.LoadingComplete);
                 }
                 else // invalid auth
                 {
@@ -104,8 +104,9 @@ namespace SSA_mHelpDesk
 
             if (result == true)
             {
-                VerifyAuthAndLoad(true);
+                VerifyAuthAndLoad();
             }
+            Startup = true;
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -143,7 +144,13 @@ namespace SSA_mHelpDesk
                     nextPage = mTicketListPage;
                     mTicketListViewModel.ShowRefreshIndicator = false;
 
-                    ((MainWindowViewModel)DataContext).LastUpdated = DateTime.Now;
+                    if (!(mTicketListViewModel.updateFailed))
+                    {
+                        if (Startup)
+                                Startup = false;
+                        ((MainWindowViewModel)DataContext).LastUpdated = DateTime.Now;
+                    }
+
 
                     // This will also restart the timer if it was already running
                     if (UserSettings.AutoRefresh)

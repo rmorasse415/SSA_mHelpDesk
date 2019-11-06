@@ -23,16 +23,21 @@
             <materialDesign:ColorZone Padding="16" materialDesign:ShadowAssist.ShadowDepth="Depth2"
                                                     Mode="PrimaryMid" DockPanel.Dock="Top">
                 <DockPanel>
-                    <Button
+                        <Button
                             Style="{DynamicResource MaterialDesignToolForegroundButton}"
                             DockPanel.Dock="Right"
                             Click="Button_Click_Settings">
-                        <materialDesign:PackIcon
+                            <materialDesign:PackIcon
                                         Kind="Settings"
                                         Height="24"
                                         Width="24" />
-                    </Button>
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" Text="{Binding LastUpdated, StringFormat=South Shore Alarms MHelpDesk Tool {0:hh:mm}}"/>
+                        </Button>
+
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Run FontSize="22"  Text="South Shore Alarms MHelpDesk Tool  "></Run>
+                      
+                        <Run  FontSize="12" Text="{Binding LastUpdated, StringFormat=Last Updated: {0:MM/dd hh:mm tt}}"></Run>
+                        </TextBlock>
                 </DockPanel>
             </materialDesign:ColorZone>
             <ContentControl x:Name="pageFrame"/>

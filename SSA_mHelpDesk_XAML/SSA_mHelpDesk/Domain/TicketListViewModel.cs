@@ -26,11 +26,14 @@ namespace SSA_mHelpDesk.Domain
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private DateTime today;
+
         protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public bool updateFailed = true;
         public bool _showRefreshIndicator = false;
         public bool ShowRefreshIndicator { get => _showRefreshIndicator;
             set
@@ -54,6 +57,7 @@ namespace SSA_mHelpDesk.Domain
 
             List<ObservableTicket> itemsInLists = new List<ObservableTicket>();
             foreach (var testList in displayLists)
+
             {
                 itemsInLists.AddRange(testList);
                 //foreach (var obsTicket in testList)
@@ -154,7 +158,7 @@ namespace SSA_mHelpDesk.Domain
               * Open: Return Needed  -> with no NAD or NAD in past  
               * 
               * Upcoming List:
-              * Fire Inspections
+              * New: Fire Inspections
               * Open: On Hold
               * 
               * 
@@ -169,7 +173,8 @@ namespace SSA_mHelpDesk.Domain
 
             if (((ticket.ticketStatus.StartsWith("Closed:")) ||
                 (ticket.ticketStatus == "New: Template") ||
-                (ticket.ticketStatus == "Withdrawn")) 
+                (ticket.ticketStatus == "Withdrawn") ||
+                (ticket.typeName == "Leads")) 
                     && (!ticket.closeError))
 
                 return null;
@@ -187,7 +192,7 @@ namespace SSA_mHelpDesk.Domain
             }
 
 
-            if (((ticket.typeName == "Fire Inspection") && (nad.HasValue) && (nad.Value.Date > today)) || (ticket.ticketStatus == "Open: On Hold"))
+            if ((((ticket.typeName == "Fire Inspection") || (ticket.typeName == "UL Inspection")) && (nad.HasValue) && (nad.Value.Date > today) && ticket.ticketStatus == "New") || (ticket.ticketStatus == "Open: On Hold"))
             {
                 return FireInspectionDataItems;
             }
@@ -202,23 +207,33 @@ namespace SSA_mHelpDesk.Domain
         public async Task<int> RefreshTicketsAsync(bool startup)
         {
             string modDate;
-            if (startup)
-                modDate = "9/1/2018";
+
+            if ((today.Day != DateTime.Today.Day) || startup)
+            {
+                today = DateTime.Today;
+                modDate = "1/1/2018";
+                ToScheduleDataItems.Clear();
+                TodayDataItems.Clear();
+                FireInspectionDataItems.Clear();
+            }
             else
+            {
                 modDate = DateTime.Today.ToShortDateString();
+            }
 
             var ticketList = await sApiManager.GetTicketsAsync(createStart: Convert.ToDateTime("1/1/2018"), lastModDate: Convert.ToDateTime(modDate), pageSize:500);  //Need to come from config              
-//            var ticketList = await sApiManager.GetTicketsAsync(createStart: Convert.ToDateTime("1/1/2018"));  //Need to come from config              
 
             if (ticketList != null)
             {
                 //Clipboard.SetText(sApiManager.GetLastRawOutput());
                 await RepairUpdatedTicketListAsync(ticketList);
                 ProcessUpdatedTicketList(ticketList);
+                updateFailed = false;
                 return ticketList.Count;
             }
             else
             {
+                updateFailed = true;
                 throw ApiManager.Instance.GetLastError();
             }
         }
