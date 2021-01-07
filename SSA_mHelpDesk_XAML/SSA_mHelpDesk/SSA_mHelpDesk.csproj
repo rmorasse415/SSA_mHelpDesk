@@ -27,8 +27,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>\\ssa-server1\ssa-data\Alarm Docs\</InstallUrl>
-    <ApplicationRevision>28</ApplicationRevision>
+    <InstallUrl>\\ssa-server\ssa-data\Alarm Docs\</InstallUrl>
+    <ApplicationRevision>35</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -54,16 +54,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>C7F736FC126D7F3D418BA522BEA463B54AA9F3AE</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>B3E050BE18C3CFB894A89128B93E492CFD3800DB</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>SSA_mHelpDesk_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>SSA_mHelpDesk_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="IdentityModel, Version=3.10.0.0, Culture=neutral, PublicKeyToken=e7877f4675df049f, processorArchitecture=MSIL">
@@ -261,6 +261,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="SSA_mHelpDesk_1_TemporaryKey.pfx" />
     <None Include="SSA_mHelpDesk_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

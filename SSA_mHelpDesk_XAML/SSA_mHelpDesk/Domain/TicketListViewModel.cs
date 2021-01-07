@@ -117,26 +117,30 @@ namespace SSA_mHelpDesk.Domain
 
             foreach (Ticket ticket in ticketList)
             {
-                if (ticket.ticketStatus.StartsWith("Closed"))
+                if (ticket.ticketStatus != null)
                 {
-                    //if we don't need to check the ticket then skip
-                    if (!errorCache.IsErrorCheckNeeded(ticket.ticketId))
-                        continue;
 
-                    var historylist = await sApiManager.GetHistoryAsync(Int32.Parse(ticket.ticketId));
-
-                    if (historylist != null)
+                    if (ticket.ticketStatus.StartsWith("Closed"))
                     {
-                        if (historylist[0].notes != null)
+                        //if we don't need to check the ticket then skip
+                        if (!errorCache.IsErrorCheckNeeded(ticket.ticketId))
+                            continue;
+
+                        var historylist = await sApiManager.GetHistoryAsync(Int32.Parse(ticket.ticketId));
+
+                        if (historylist != null)
                         {
-                            ticket.closedBy = historylist[0].userId.ToLower();
-                            // need to loop thru list to find who closed ticket
-                            if (!(ticket.closedBy.StartsWith("tracey@") || ticket.closedBy.StartsWith("ron@")))
+                            if (historylist[0].notes != null)
                             {
-                                ticket.ticketStatus = "** Error **";
-                                ticket.closeError = true;
+                                ticket.closedBy = historylist[0].userId.ToLower();
+                                // need to loop thru list to find who closed ticket
+                                if (!(ticket.closedBy.StartsWith("tracey@") || ticket.closedBy.StartsWith("ron@")))
+                                {
+                                    ticket.ticketStatus = "** Error **";
+                                    ticket.closeError = true;
+                                }
+                                errorCache.MarkAsChecked(ticket.ticketId, ticket.closeError);
                             }
-                            errorCache.MarkAsChecked(ticket.ticketId, ticket.closeError);
                         }
                     }
                 }
@@ -192,7 +196,7 @@ namespace SSA_mHelpDesk.Domain
             }
 
 
-            if ((((ticket.typeName == "Fire Inspection") || (ticket.typeName == "UL Inspection")) && (nad.HasValue) && (nad.Value.Date > today) && ticket.ticketStatus == "New") || (ticket.ticketStatus == "Open: On Hold"))
+            if ((((ticket.typeName == "Fire Inspection") || (ticket.typeName == "UL Inspection")) && (nad.HasValue) && (nad.Value.Date > today) && ticket.ticketStatus == "New") || (ticket.ticketStatus == "Open: On Hold") || (ticket.ticketStatus == "New: Waiting For Parts") || (ticket.ticketStatus == "Open: On Hold CV19"))
             {
                 return FireInspectionDataItems;
             }
